@@ -1,0 +1,145 @@
+:root {
+    --theme-dark: #170F24;
+    --border-radius: 15px;
+}
+
+/** POSITION **/
+
+.relative {
+    position: relative;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.fixed {
+    position: fixed;
+}
+
+.t-0 {
+    top: 0;
+}
+
+.l-0 {
+    left: 0;
+}
+
+/** DIMENSIONI **/
+
+.full-w {
+    width: 100vw;
+}
+
+.full-h {
+    height: 100vh;
+}
+
+/** THEME **/
+
+.bg-dark {
+    background: var(--theme-dark);
+}
+
+/* TEXT FIELDS */
+
+* {
+    font-family: 'Sofia Pro';
+}
+
+h1, h2, h3, h4, h5 {
+    font-family: 'Sofia Pro';
+    color: white;
+    font-style: normal;
+    margin: 0 0;
+}
+
+h1 {
+    font-weight: bold;
+    font-size: 36px;
+}
+
+h2 {
+    font-weight: 500;
+    font-size: 24px;
+}
+
+h3 {
+    font-weight: 500;
+    font-size: 18px;
+}
+
+/* CUSTOM ELEMENTS */
+
+.backdrop {
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.3);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.alert {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 1001;
+    background: white;
+    height: fit-content;
+    min-height: 20vh;
+    width: 100vw;
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+    text-align: center;
+}
+
+.alert h2, .alert h3 {
+    color: var(--theme-dark);
+    margin: 1rem auto;
+}
+
+.loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+    z-index: 1002;
+}
+
+.loader img {
+    margin: 0 auto 1rem;
+    height: 3rem;
+    width: 3rem;
+}
+
+.flat-button {
+    background: white;
+    height: 60px;
+    width: 80vw;
+    margin: 1.5rem auto;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    border-radius: var(--border-radius);
+}
+
+.flat-button h3 {
+    color: var(--theme-dark);
+    font-weight: 600;
+}
+
+.flat-button.dark {
+    background: var(--theme-dark);
+}
+
+.flat-button.dark h3 {
+    color: white;
+}
