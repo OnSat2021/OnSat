@@ -1,21 +1,20 @@
-var app = Vue.createApp({
-    data() {
-        return {
-            DEBUG: true,
-            /****/
-            loader: {
-                "message": "Caricamento in corso",
-                "picture": "./src/loader.gif",
-                "active": false
-            },
-            alert: {
-                "message": "Alert",
-                "body": "Descrizione",
-                "button": null,
-                "active": false
-            },
-            modal: null
-        }
+var app = new Vue({
+    el: "#app",
+    data: {
+        DEBUG: false,
+        /****/
+        loader: {
+            "message": "Caricamento in corso",
+            "picture": "./src/loader.gif",
+            "active": false
+        },
+        alert: {
+            "message": "Alert",
+            "body": "Descrizione",
+            "button": null,
+            "active": false
+        },
+        modal: null
     },
     methods: {
         /** LOADER **/

@@ -1,4 +1,4 @@
-app.component('loader', {
+Vue.component('loader', {
     props: ['loader'],
     template: `<div class="loader">
         <img v-bind:src="loader.picture">
@@ -6,7 +6,7 @@ app.component('loader', {
     </div>`
 });
 
-app.component('alert', {
+Vue.component('alert', {
     props: ['alert'],
     template: `<div class="alert">
         <h2>{{alert.message}}</h2>
@@ -16,16 +16,17 @@ app.component('alert', {
     </div>`
 });
 
-app.component('flat-button', {
+Vue.component('flat-button', {
     props: ['label', 'dark'],
     template: `<div class="flat-button" :class="{'dark':'dark'}">
         <h3>{{label}}</h3>
     </div>`
 });
 
-app.component('backdrop', {
+Vue.component('backdrop', {
     template: `<div class="backdrop"></div>`
 });
 
-
+/*
 app = app.mount('#app');
+*/
