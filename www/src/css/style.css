@@ -3,6 +3,7 @@
     --border-radius: 15px;
 }
 
+
 /** POSITION **/
 
 .relative {
@@ -25,6 +26,7 @@
     left: 0;
 }
 
+
 /** DIMENSIONI **/
 
 .full-w {
@@ -35,11 +37,13 @@
     height: 100vh;
 }
 
+
 /** THEME **/
 
 .bg-dark {
     background: var(--theme-dark);
 }
+
 
 /* TEXT FIELDS */
 
@@ -47,7 +51,11 @@
     font-family: 'Sofia Pro';
 }
 
-h1, h2, h3, h4, h5 {
+h1,
+h2,
+h3,
+h4,
+h5 {
     font-family: 'Sofia Pro';
     color: white;
     font-style: normal;
@@ -68,6 +76,7 @@ h3 {
     font-weight: 500;
     font-size: 18px;
 }
+
 
 /* CUSTOM ELEMENTS */
 
@@ -95,7 +104,8 @@ h3 {
     text-align: center;
 }
 
-.alert h2, .alert h3 {
+.alert h2,
+.alert h3 {
     color: var(--theme-dark);
     margin: 1rem auto;
 }
@@ -142,4 +152,61 @@ h3 {
 
 .flat-button.dark h3 {
     color: white;
+}
+
+
+/*****************************************************************/
+
+.full-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+.bg-green {
+    background: green;
+}
+
+.bg-black {
+    background: black;
+}
+
+.bg-white {
+    background: white;
+}
+
+.bg-blue {
+    background: blue;
+}
+
+.bg-red {
+    background: red;
+}
+
+
+/**************/
+
+
+/* Enter and leave animations can use different */
+
+
+/* durations and timing functions.              */
+
+.slide-fade-enter-active {
+    transition: all .3s ease;
+}
+
+.slide-fade-leave-active {
+    transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+
+.slide-fade-enter,
+.slide-fade-leave-to
+/* .slide-fade-leave-active below version 2.1.8 */
+
+{
+    transform: translateX(10px);
+    opacity: 0;
 }

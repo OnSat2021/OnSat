@@ -2,6 +2,10 @@ var app = new Vue({
     el: "#app",
     data: {
         DEBUG: false,
+
+        /** ROUTING **/
+        currentRoute: window.location.pathname,
+
         /****/
         loader: {
             "message": "Caricamento in corso",
@@ -46,9 +50,17 @@ var app = new Vue({
         }
     },
     computed: {
+
+        /** ROUTING **/
+        ViewComponent() {
+            return routes[this.currentRoute] || NotFound
+        },
+
         /** LOADER, ALERT, MODAL**/
         backdrop() {
             return !(this.loader.active == false && this.alert == null && this.modal == null);
         }
-    }
+    },
+
+    render(h) { return h(this.ViewComponent) }
 });
