@@ -1,6 +1,9 @@
-let mounted = function () {
+let created = async function () {
+    await setTimeout(null, 0);
     this.selectedSection = this.sections[0];
+    this.$emit("update-section", this.selectedSection.path);
 };
+
 
 var navigationBar = Vue.component('navigation-bar', {
     data: function () {
@@ -51,7 +54,7 @@ var navigationBar = Vue.component('navigation-bar', {
             app.currentRoute = section.path;
         }
     },
-    mounted,
+    created,
     template: `
         <div class="select-none flex flex-row h-16 w-screen bg-dark absolute bottom-0 left-0 justify-center rounded-t-xl">
             <div v-for="section in sections" :class="sectionClass(section)" class="cursor-pointer flex flex-col h-full bg-transparent w-20 mx-2 mt-0 justify-center rounded-xl transition-all duration-500 ease-in-out" @click="goTo(section)">
@@ -69,143 +72,6 @@ function selector_class(condition) {
         'text-lg': condition
     }
 };
-
-/** MAP **/
-Vue.component('map-style-selector', {
-    data: function () {
-        return {
-            sections: [{
-                    "label": "Classic",
-                    "value": "default"
-                },
-                {
-                    "label": "Dark",
-                    "value": "night"
-                },
-                {
-                    "label": "Retro",
-                    "value": "retro"
-                },
-                {
-                    "label": "Silver",
-                    "value": "silver"
-                }
-            ],
-            selectedSection: null,
-            subSectionClass: (section) => {
-                let condition = section == this.selectedSection;
-                return selector_class(condition);
-            },
-            open: true,
-        }
-    },
-    methods: {
-        changeMap: function (section) {
-            this.selectedSection = section;
-            app.print("Cambio mappa: " + section.value);
-            map.setOptions({
-                styles: styles[section.value]
-            });
-        }
-    },
-    mounted,
-    template: `
-        <div class="select-none flex flex-row h-10 w-screen bg-dark absolute top-0 left-0 justify-center">
-            <div v-show="open" v-for="section in sections" class="cursor-pointer flex flex-col h-full bg-transparent w-20 mx-2 bottom-0 justify-center rounded-b-xl transition-all duration-500 ease-in-out" @click="changeMap(section)">
-                <span :class="subSectionClass(section)" class="text-center transition-all duration-500 ease-in-out">{{section.label}}</span>
-            </div>
-            <div v-show="!open" class="flex flex-row h-full bg-transparent w-screen mx-2 bottom-0 justify-center rounded-b-xl transition-all duration-500 ease-in-out" @click="changeMap(section)">
-                <!--span class="flex flex-col justify-center text-white text-center material-icons mr-1">create</span-->
-                <span class="cursor-pointer flex flex-col justify-center text-white text-left" @click="open = true">Cambia Stile Mappa</span>
-            </div>
-        </div>
-    `
-});
-/** END MAP **/
-/** HOME **/
-Vue.component('home-selector', {
-    data: function () {
-        return {
-            sections: [{
-                    "label": "Meteo",
-                    "value": "default"
-                },
-                {
-                    "label": "Bici",
-                    "value": "night"
-                },
-                {
-                    "label": "Profilo",
-                    "value": "retro"
-                },
-                {
-                    "label": "Logout",
-                    "value": "silver"
-                }
-            ],
-            selectedSection: null,
-            subSectionClass: (section) => {
-                let condition = section == this.selectedSection;
-                return selector_class(condition);
-            }
-        }
-    },
-    methods: {
-        changeMap: function (section) {
-            this.selectedSection = section;
-        }
-    },
-    mounted,
-    template: `
-        <div class="select-none flex flex-row h-10 w-screen bg-dark absolute top-0 left-0 justify-center">
-            <div v-for="section in sections" class="cursor-pointer flex flex-col h-full bg-transparent w-20 mx-2 bottom-0 justify-center rounded-b-xl transition-all duration-500 ease-in-out" @click="changeMap(section)">
-                <span :class="subSectionClass(section)" class="text-center transition-all duration-500 ease-in-out">{{section.label}}</span>
-            </div>
-        </div>
-    `
-});
-/** END HOME **/
-
-
-/** STORE **/
-Vue.component('store-selector', {
-    data: function () {
-        return {
-            sections: [{
-                    "label": "Catalogo",
-                    "value": "default"
-                }, {
-                    "label": "Ordini",
-                    "value": "default"
-                },
-                {
-                    "label": "Carrello",
-                    "value": "night"
-                }
-            ],
-            selectedSection: null,
-            subSectionClass: (section) => {
-                let condition = section == this.selectedSection;
-                return selector_class(condition);
-            }
-        }
-    },
-    methods: {
-        changeMap: function (section) {
-            this.selectedSection = section;
-        }
-    },
-    mounted,
-    template: `
-        <div class="select-none flex flex-row h-10 w-screen bg-dark absolute top-0 left-0 justify-center">
-            <div v-for="section in sections" class="cursor-pointer flex flex-col h-full bg-transparent w-20 mx-2 bottom-0 justify-center rounded-b-xl transition-all duration-500 ease-in-out" @click="changeMap(section)">
-                <span :class="subSectionClass(section)" class="text-center transition-all duration-500 ease-in-out">{{section.label}}</span>
-            </div>
-        </div>
-    `
-});
-/** END STORE **/
-
 
 Vue.component('loader', {
     props: ['loader'],
