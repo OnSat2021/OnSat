@@ -3,47 +3,15 @@
     --border-radius: 15px;
 }
 
-
-/** POSITION **/
-
-.relative {
-    position: relative;
-}
-
-.absolute {
-    position: absolute;
-}
-
-.fixed {
-    position: fixed;
-}
-
-.t-0 {
-    top: 0;
-}
-
-.l-0 {
-    left: 0;
-}
-
-
-/** DIMENSIONI **/
-
-.full-w {
-    width: 100vw;
-}
-
-.full-h {
-    height: 100vh;
-}
-
-
 /** THEME **/
 
 .bg-dark {
     background: var(--theme-dark);
 }
 
+.text-dark {
+    color: var(--theme-dark);
+}
 
 /* TEXT FIELDS */
 
@@ -51,11 +19,7 @@
     font-family: 'Sofia Pro';
 }
 
-h1,
-h2,
-h3,
-h4,
-h5 {
+h1, h2, h3, h4, h5 {
     font-family: 'Sofia Pro';
     color: white;
     font-style: normal;
@@ -77,18 +41,7 @@ h3 {
     font-size: 18px;
 }
 
-
 /* CUSTOM ELEMENTS */
-
-.backdrop {
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.3);
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-}
 
 .alert {
     position: absolute;
@@ -104,29 +57,9 @@ h3 {
     text-align: center;
 }
 
-.alert h2,
-.alert h3 {
+.alert h2, .alert h3 {
     color: var(--theme-dark);
     margin: 1rem auto;
-}
-
-.loader {
-    position: absolute;
-    top: 0;
-    left: 0;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 100vh;
-    width: 100vw;
-    z-index: 1002;
-}
-
-.loader img {
-    margin: 0 auto 1rem;
-    height: 3rem;
-    width: 3rem;
 }
 
 .flat-button {
@@ -154,59 +87,28 @@ h3 {
     color: white;
 }
 
-
-/*****************************************************************/
-
-.full-screen {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-}
-
-.bg-green {
-    background: green;
-}
-
-.bg-black {
-    background: black;
-}
-
-.bg-white {
-    background: white;
-}
-
-.bg-blue {
-    background: blue;
-}
-
-.bg-red {
-    background: red;
-}
-
-
 /**************/
 
-
 /* Enter and leave animations can use different */
-
 
 /* durations and timing functions.              */
 
 .slide-fade-enter-active {
-    transition: all .3s ease;
+    opacity: 0;
+    transition: all .3s ease-in;
 }
 
 .slide-fade-leave-active {
-    transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+    opacity: 0;
+    transition: all .3s ease-out;
 }
 
-.slide-fade-enter,
-.slide-fade-leave-to
-/* .slide-fade-leave-active below version 2.1.8 */
+.slide-fade-enter {
+    transform: translateX(100vw);
+    opacity: 1;
+}
 
-{
-    transform: translateX(10px);
-    opacity: 0;
+.slide-fade-leave-to {
+    transform: translateX(100vw);
+    opacity: 1
 }

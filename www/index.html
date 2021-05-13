@@ -7,28 +7,49 @@
     <link href="./src/css/style.css" rel="stylesheet">
     <link href="./src/font/SofiaPro.css" rel="stylesheet">
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
 <body>
-    <div id="app" class="full-h full-w absolute bg-dark t-0 l-0">
+    <div id="app" class="w-screen h-screen absolute bg-dark top-0 left-0">
+
+
+        <template v-if="loggedin">
+
+            <route-store v-show="checkRoute('/store')"></route-store>
+            <route-map v-show="checkRoute('/map')"></route-map>
+            <route-paths v-show="checkRoute('/paths')"></route-paths>
+            <route-home v-show="checkRoute('/')"></route-home>
+            <navigation-bar></navigation-bar>
+
+        </template>
+
         <backdrop v-show="backdrop"></backdrop>
         <alert v-show="alert.active" :alert="alert">
-            <flat-button v-if="alert.button" :label="alert.button" dark="true" onclick="app.alertDismiss()"></flat-button>
+            <flat-button v-if="alert.button" :label="alert.button" dark="true" onclick="app.alertDismiss()">
+            </flat-button>
         </alert>
         <loader v-show="loader.active" :loader="loader"></loader>
 
-        <router-link class="nav-link" to="/"> Home </router-link>
-        <router-link class="nav-link" to="/map"> Map </router-link>
-        <router-link class="nav-link" to="/store"> Store </router-link>
-        <router-view style="width: 100vw; height: 50vh; background: red; position: absolute;top: 50vh; left:0;">
-
-        </router-view>
 
     </div>
+
+
+
+
+    <!-- template -->
     <script src="routing.js" type="text/javascript"></script>
     <script src="components.js" type="text/javascript"></script>
     <script src="index.js" type="text/javascript"></script>
-    <!--script src="index.js" type="text/javascript"></script-->
+
+    <!-- routines -->
+    <script src="routines/js/maps.js" type="text/javascript"></script>
+
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBxlzQBEBoxfFVyYfx93jHNT-E2bMQEfrA&callback=initMap&libraries=&v=weekly"
+        async></script>
+
 </body>
 
 </html>

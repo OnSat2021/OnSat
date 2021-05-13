@@ -1,7 +1,10 @@
 var app = new Vue({
     el: "#app",
     data: {
-        DEBUG: false,
+        DEBUG: true,
+
+        /** LOGGEDIN **/
+        loggedin: true,
 
         /** ROUTING **/
         currentRoute: window.location.pathname,
@@ -47,20 +50,31 @@ var app = new Vue({
         /** ROUTINES **/
         print(log) {
             if (this.DEBUG) console.log(log);
+        },
+
+
+        /** ROUTING **/
+        checkRoute(path) {
+            return path == this.currentRoute;
         }
     },
     computed: {
 
         /** ROUTING **/
-        ViewComponent() {
-            return routes[this.currentRoute] || NotFound
-        },
+        /* ViewComponent() {
+             return routes[this.currentRoute] || NotFound
+         },*/
 
         /** LOADER, ALERT, MODAL**/
         backdrop() {
-            return !(this.loader.active == false && this.alert == null && this.modal == null);
+            return !(this.loader.active == false && this.alert.active == false && this.modal == null);
         }
     },
-
-    render(h) { return h(this.ViewComponent) }
+    mounted() {
+        this.currentRoute = "/";
+    }
+    /*
+        render(h) {
+            return h(this.ViewComponent)
+        }*/
 });
