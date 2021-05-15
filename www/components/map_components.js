@@ -21,9 +21,9 @@ Vue.component('route-map', {
     template: `
     <transition name="slide-fade">
         <section>    
-            <div class="relative top-0 left-0 h-full w-screen bg-dark text-white text-center font-bold flex flex-col justify-center">
-                <div id="map" class="w-full h-full"></div>
-                <map-style-selector></map-style-selector>   
+            <div class="relative top-0 left-0 h-full w-screen bg-dark text-white text-center font-bold flex flex-col justify-start">
+                <div id="map" class="section"></div>
+                <map-style-selector class="selector"></map-style-selector>   
             </div>
         </section>
     </transition>`

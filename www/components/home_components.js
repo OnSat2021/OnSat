@@ -20,12 +20,12 @@ Vue.component('route-home', {
     },
     template: `
     <transition name="slide-fade">
-        <div class="relative top-0 left-0 h-full w-screen bg-dark text-white text-center font-bold flex flex-col justify-center">
-            <weather-section v-show="checkSection('/weather')"></weather-section>
-            <bikes-section v-show="checkSection('/bikes')"></bikes-section>
-            <user-section v-show="checkSection('/user')"></user-section>
-            <logout-section v-show="checkSection('/logout')"></logout-section>
-            <home-selector v-on:update-section="updateCurrentSection"></home-selector>
+        <div class="relative top-0 left-0 h-full w-screen bg-dark text-white text-center font-bold flex flex-col justify-start">
+            <weather-section class="section" v-show="checkSection('/weather')"></weather-section>
+            <bikes-section class="section" v-show="checkSection('/bikes')"></bikes-section>
+            <user-section class="section" v-show="checkSection('/user')"></user-section>
+            <logout-section class="section" v-show="checkSection('/logout')"></logout-section>
+            <home-selector class="selector" v-on:update-section="updateCurrentSection"></home-selector>
         </div>
     </transition>`
 });

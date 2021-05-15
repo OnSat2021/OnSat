@@ -56,7 +56,7 @@ var navigationBar = Vue.component('navigation-bar', {
     },
     created,
     template: `
-        <div class="select-none flex flex-row h-16 w-screen bg-dark absolute bottom-0 left-0 justify-center rounded-t-xl">
+        <div class="navigation-bar select-none flex flex-row h-16 w-screen bg-dark absolute bottom-0 left-0 justify-center rounded-t-xl">
             <div v-for="section in sections" :class="sectionClass(section)" class="cursor-pointer flex flex-col h-full bg-transparent w-20 mx-2 mt-0 justify-center rounded-xl transition-all duration-500 ease-in-out" @click="goTo(section)">
                 <span :class="subSectionClass(section)" class="text-center material-icons transition-all duration-500 ease-in-out">{{section.icon}}</span>
                 <span :class="subSectionClass(section)" class="text-center transition-all duration-500 ease-in-out">{{section.label}}</span>
@@ -92,8 +92,8 @@ Vue.component('alert', {
 });
 
 Vue.component('flat-button', {
-    props: ['label', 'dark'],
-    template: `<div class="flat-button" :class="{'dark':'dark'}">
+    props: ['label', 'mode'],
+    template: `<div class="flat-button" :class="{'dark': (mode == 'dark')}">
         <h3>{{label}}</h3>
     </div>`
 });
@@ -105,3 +105,14 @@ Vue.component('backdrop', {
 /*
 app = app.mount('#app');
 */
+
+
+
+
+Vue.component('section-header', {
+    props: ['title', 'subtitle'],
+    template: `<div class="w-screen left-0 top-0 relative text-white text-left p-8">
+        <h1 class="text-5xl font-bold">{{title}}</h1>
+        <h2 class="text-2xl mt-2 font-normal" v-if="subtitle">{{subtitle}}</h2>
+    </div>`
+});

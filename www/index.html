@@ -27,7 +27,7 @@
 
         <backdrop v-show="backdrop"></backdrop>
         <alert v-show="alert.active" :alert="alert">
-            <flat-button v-if="alert.button" :label="alert.button" dark="true" onclick="app.alertDismiss()">
+            <flat-button v-if="alert.button" :label="alert.button" mode="dark" onclick="app.alertDismiss()">
             </flat-button>
         </alert>
         <loader v-show="loader.active" :loader="loader"></loader>

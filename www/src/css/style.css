@@ -1,12 +1,19 @@
 :root {
     --theme-dark: #170F24;
+    --theme-light: #2F263D;
     --border-radius: 15px;
+    --selector-height: 3rem;
+    --navigation-bar-height: 4rem;
 }
 
 /** THEME **/
 
 .bg-dark {
     background: var(--theme-dark);
+}
+
+.bg-light {
+    background: var(--theme-light);
 }
 
 .text-dark {
@@ -111,4 +118,22 @@ h3 {
 .slide-fade-leave-to {
     transform: translateX(100vw);
     opacity: 1
+}
+
+/****SECTION****/
+
+.selector {
+    height: var(--selector-height)!important;
+}
+
+.section {
+    top: var(--selector-height)!important;
+    height: calc(100vh - var(--selector-height) - var(--navigation-bar-height))!important;
+    max-height: calc(100vh - var(--selector-height) - var(--navigation-bar-height))!important;
+    overflow-y: scroll!important;
+    padding-bottom: 5rem;
+}
+
+.navigation-bar {
+    height: var(--navigation-bar-height)!important;
 }
