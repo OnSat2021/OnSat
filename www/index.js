@@ -31,8 +31,11 @@ var app = new Vue({
             this.loader.active = true;
         },
         loaderDismiss() {
-            this.print("Dismetti Loader");
-            this.loader.active = false;
+            let self = this;
+            setTimeout(function() {
+                self.print("Dismetti Loader");
+                self.loader.active = false;
+            }, 800);
         },
         /** ALERT **/
         alertPresent(message, body, button = null) {

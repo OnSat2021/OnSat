@@ -6,6 +6,7 @@
     --navigation-bar-height: 4rem;
 }
 
+
 /** THEME **/
 
 .bg-dark {
@@ -20,13 +21,18 @@
     color: var(--theme-dark);
 }
 
+
 /* TEXT FIELDS */
 
 * {
     font-family: 'Sofia Pro';
 }
 
-h1, h2, h3, h4, h5 {
+h1,
+h2,
+h3,
+h4,
+h5 {
     font-family: 'Sofia Pro';
     color: white;
     font-style: normal;
@@ -48,6 +54,7 @@ h3 {
     font-size: 18px;
 }
 
+
 /* CUSTOM ELEMENTS */
 
 .alert {
@@ -64,7 +71,8 @@ h3 {
     text-align: center;
 }
 
-.alert h2, .alert h3 {
+.alert h2,
+.alert h3 {
     color: var(--theme-dark);
     margin: 1rem auto;
 }
@@ -72,6 +80,7 @@ h3 {
 .flat-button {
     background: white;
     height: 60px;
+    min-height: 60px;
     width: 80vw;
     margin: 1.5rem auto;
     display: flex;
@@ -94,31 +103,23 @@ h3 {
     color: white;
 }
 
+
 /**************/
+
 
 /* Enter and leave animations can use different */
 
+
 /* durations and timing functions.              */
 
-.slide-fade-enter-active {
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 0.25s ease-out;
+  }
+  
+  .fade-enter, .fade-leave-to {
     opacity: 0;
-    transition: all .3s ease-in;
-}
+  }
 
-.slide-fade-leave-active {
-    opacity: 0;
-    transition: all .3s ease-out;
-}
-
-.slide-fade-enter {
-    transform: translateX(100vw);
-    opacity: 1;
-}
-
-.slide-fade-leave-to {
-    transform: translateX(100vw);
-    opacity: 1
-}
 
 /****SECTION****/
 

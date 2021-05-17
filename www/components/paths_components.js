@@ -19,8 +19,6 @@ Vue.component('route-paths', {
         this.currentSection = "/";
     },
     template: `
-    <transition name="slide-fade">
-        <div class="relative top-0 left-0 h-full w-screen bg-dark text-white text-center font-bold flex flex-col justify-center">Paths</div>
-    </transition>`
+        <div class="relative top-0 left-0 h-full w-screen bg-dark text-white text-center font-bold flex flex-col justify-center">Paths</div>`
 });
 /** END MAIN **/

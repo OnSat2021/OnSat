@@ -1,4 +1,4 @@
-let created = async function () {
+let created = async function() {
     await setTimeout(null, 0);
     this.selectedSection = this.sections[0];
     this.$emit("update-section", this.selectedSection.path);
@@ -6,7 +6,7 @@ let created = async function () {
 
 
 var navigationBar = Vue.component('navigation-bar', {
-    data: function () {
+    data: function() {
         return {
             sections: [{
                     "label": "Home",
@@ -48,7 +48,7 @@ var navigationBar = Vue.component('navigation-bar', {
         }
     },
     methods: {
-        goTo: function (section) {
+        goTo: function(section) {
             this.selectedSection = section;
             app.print("Navigo verso: " + section.path);
             app.currentRoute = section.path;
@@ -93,7 +93,12 @@ Vue.component('alert', {
 
 Vue.component('flat-button', {
     props: ['label', 'mode'],
-    template: `<div class="flat-button" :class="{'dark': (mode == 'dark')}">
+    methods: {
+        emitClick() {
+            this.$emit("click", "");
+        }
+    },
+    template: `<div class="flat-button" :class="{'dark': (mode == 'dark')}" @click="emitClick()">
         <h3>{{label}}</h3>
     </div>`
 });

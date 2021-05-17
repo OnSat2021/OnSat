@@ -19,20 +19,18 @@ Vue.component('route-map', {
         this.currentSection = "/";
     },
     template: `
-    <transition name="slide-fade">
         <section>    
             <div class="relative top-0 left-0 h-full w-screen bg-dark text-white text-center font-bold flex flex-col justify-start">
                 <div id="map" class="section"></div>
                 <map-style-selector class="selector"></map-style-selector>   
             </div>
-        </section>
-    </transition>`
+        </section>`
 });
 /** END MAIN **/
 
 /** SELECTOR **/
 Vue.component('map-style-selector', {
-    data: function () {
+    data: function() {
         return {
             sections: [{
                     "label": "Classic",
@@ -64,7 +62,7 @@ Vue.component('map-style-selector', {
         }
     },
     methods: {
-        changeMap: function (section) {
+        changeMap: function(section) {
             this.selectedSection = section;
             app.print("Cambio mappa: " + section.value);
             map.setOptions({

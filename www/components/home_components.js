@@ -19,7 +19,7 @@ Vue.component('route-home', {
         this.currentSection = "/";
     },
     template: `
-    <transition name="slide-fade">
+    <transition name="">
         <div class="relative top-0 left-0 h-full w-screen bg-dark text-white text-center font-bold flex flex-col justify-start">
             <weather-section class="section" v-show="checkSection('/weather')"></weather-section>
             <bikes-section class="section" v-show="checkSection('/bikes')"></bikes-section>
@@ -33,7 +33,7 @@ Vue.component('route-home', {
 
 /** SELECTOR **/
 Vue.component('home-selector', {
-    data: function () {
+    data: function() {
         return {
             sections: [{
                     "label": "Meteo",
@@ -60,7 +60,7 @@ Vue.component('home-selector', {
         }
     },
     methods: {
-        changeMap: function (section) {
+        changeMap: function(section) {
             this.$emit("update-section", section.path);
             this.selectedSection = section;
         }
@@ -79,34 +79,26 @@ Vue.component('home-selector', {
 /** PAGINE INTERNE **/
 Vue.component('weather-section', {
     template: `
-    <transition name="slide-fade">
     <div class="relative top-0 left-0 h-full w-screen bg-dark text-white text-center font-bold flex flex-col justify-center">
     Weather
-    </div>
-    </transition>`
+    </div>`
 });
 Vue.component('bikes-section', {
     template: `
-    <transition name="slide-fade">
     <div class="relative top-0 left-0 h-full w-screen bg-dark text-white text-center font-bold flex flex-col justify-center">
     Bikes
-    </div>
-    </transition>`
+    </div>`
 });
 Vue.component('user-section', {
     template: `
-    <transition name="slide-fade">
     <div class="relative top-0 left-0 h-full w-screen bg-dark text-white text-center font-bold flex flex-col justify-center">
     User
-    </div>
-    </transition>`
+    </div>`
 });
 Vue.component('logout-section', {
     template: `
-    <transition name="slide-fade">
     <div class="relative top-0 left-0 h-full w-screen bg-dark text-white text-center font-bold flex flex-col justify-center">
     Logout
-    </div>
-    </transition>`
+    </div>`
 });
 /** END PAGINE INTERNE **/
