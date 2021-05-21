@@ -1,0 +1,9 @@
+GET http://localhost:8888 HTTP/1.1
+
+###
+GET http://localhost:8888/weather HTTP/1.1
+###
+GET http://onsat.ongroup.cloud:8888 HTTP/1.1
+
+###
+GET http://onsat.ongroup.cloud:8888/weather HTTP/1.1
