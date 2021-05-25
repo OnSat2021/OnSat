@@ -32,7 +32,7 @@ var app = new Vue({
         },
         loaderDismiss() {
             let self = this;
-            setTimeout(function() {
+            setTimeout(function () {
                 self.print("Dismetti Loader");
                 self.loader.active = false;
             }, 800);
@@ -81,3 +81,45 @@ var app = new Vue({
             return h(this.ViewComponent)
         }*/
 });
+
+
+function onErrorDefault(e) {
+    console.warn("Errore xhr: " + e);
+}
+
+function onSuccessDefault(obj) {
+    console.log(obj);
+}
+
+function sendRequest(mode = 'POST', relative_path, json = {}, onSuccess = onSuccessDefault, onError = onErrorDefault) {
+    var xhr = new XMLHttpRequest();
+    let url = 'https://onsat.ongroup.cloud' + relative_path;
+    url = 'http://localhost:8888' + relative_path;
+    xhr.open(mode, url);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function () {
+        let reply = xhr.responseText;
+        try {
+            var obj = JSON.parse(reply);
+            console.log(obj);
+        } catch (error) {
+            console.log(reply);
+            return onError(error);
+        }
+        return onSuccess(obj);
+    };
+    xhr.send(JSON.stringify(json));
+}
+
+function getParams() {
+    var args = new Array();
+    var vars = (window.location.href.split("?"))[1];
+    if (vars) {
+        var strings = vars.split('&');
+        for (elem in strings) {
+            var parts = strings[elem].split('=');
+            args[unescape(parts[0])] = unescape(parts[1]);
+        }
+    }
+    return args;
+}

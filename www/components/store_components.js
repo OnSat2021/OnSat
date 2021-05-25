@@ -9,39 +9,7 @@ Vue.component('route-store', {
             currentSection: window.location.pathname,
             /** CART **/
             cart: [],
-            products: [{
-                    "id": "prod_0001",
-                    "name": "All Road Plus",
-                    "price": "1469.90",
-                    "picture": "./src/imgs/all-road.png",
-                    "description": "Proin vel lorem eget nunc aliquam ultrices non sodales nunc. Pellentesque vel dapibus felis. Aliquam vitae ligula imperdiet, tempor risus vel, sollicitudin nibh. ",
-                    "available": 8
-                },
-                {
-                    "id": "prod_0003",
-                    "name": "Cestino portapacchi",
-                    "price": "24.90",
-                    "picture": "./src/imgs/all-road.png",
-                    "description": "Proin vel lorem eget nunc aliquam ultrices non sodales nunc. Pellentesque vel dapibus felis. Aliquam vitae ligula imperdiet, tempor risus vel, sollicitudin nibh. ",
-                    "available": 0
-                },
-                {
-                    "id": "prod_0002",
-                    "name": "Batteria 48 V",
-                    "price": "389.90",
-                    "picture": "./src/imgs/all-road.png",
-                    "description": "Proin vel lorem eget nunc aliquam ultrices non sodales nunc. Pellentesque vel dapibus felis. Aliquam vitae ligula imperdiet, tempor risus vel, sollicitudin nibh. ",
-                    "available": 4
-                },
-                {
-                    "id": "prod_0004",
-                    "name": "Zainetto On",
-                    "price": "19.90",
-                    "picture": "./src/imgs/all-road.png",
-                    "description": "Proin vel lorem eget nunc aliquam ultrices non sodales nunc. Pellentesque vel dapibus felis. Aliquam vitae ligula imperdiet, tempor risus vel, sollicitudin nibh. ",
-                    "available": 2
-                }
-            ],
+            products: [],
             selectedProduct: null
         };
     },
@@ -92,6 +60,14 @@ Vue.component('route-store', {
     mounted() {
         this.currentSection = "/";
         STORE = this;
+
+        sendRequest('GET', '/data/products', {}, res => {
+            if (res.error_code) {
+                app.alertPresent('Errore', res.error_desc, 'Ok');
+                return;
+            }
+            STORE.products = res.result;
+        })
     },
     template: `
         <div class="relative top-0 left-0 h-full w-screen bg-dark text-white text-center font-bold flex flex-col justify-start">
@@ -117,7 +93,7 @@ Vue.component('route-store', {
 
 /** SELECTOR **/
 Vue.component('store-selector', {
-    data: function() {
+    data: function () {
         return {
             sections: [{
                     "label": "Catalogo",
@@ -142,7 +118,7 @@ Vue.component('store-selector', {
         }
     },
     methods: {
-        changeMap: function(section) {
+        changeMap: function (section) {
             this.$emit("update-section", section.path);
             this.selectedSection = section;
         }
@@ -167,7 +143,7 @@ Vue.component('catalog-section', {
     template: `
     <div class="relative top-0 left-0 h-full w-screen bg-dark text-white text-center font-bold flex flex-col justify-start">
         <section-header title="Catalogo" subtitle="Scopri i nostri prodotti"></section-header>
-        <product-card v-for="product in products" :key="product.id" :product="product" :selected-product="selectedProduct" ></product-card>
+        <product-card v-for="product in products" :key="product.product_id" :product="product" :selected-product="selectedProduct" ></product-card>
     </div>`
 });
 Vue.component('orders-section', {
@@ -234,7 +210,7 @@ Vue.component('cart-section', {
 
 Vue.component('product-card', {
     props: ['product', 'selectedProduct'],
-    data: function() {
+    data: function () {
         return {
             quantity: 1
         }
@@ -258,12 +234,12 @@ Vue.component('product-card', {
         }
     },
     computed: {
-        selected: function() {
+        selected: function () {
             if (this.selectedProduct == null)
                 return false;
             return this.selectedProduct.id == this.product.id
         },
-        available: function() {
+        available: function () {
             return this.product.available > 0;
         }
     },

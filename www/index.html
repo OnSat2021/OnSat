@@ -2,6 +2,7 @@
 
 <head>
     <title>OnSat</title>
+    <link rel="icon" href="https://onsat.ongroup.cloud/client/www/src/imgs/logo120x120.ico" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
     <link href="./src/css/style.css" rel="stylesheet">
@@ -9,6 +10,7 @@
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
     <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
 </head>
 
 <body>
@@ -24,9 +26,6 @@
                 <navigation-bar key="nav-bar"></navigation-bar>
             </transition-group>
         </template>
-        <template v-else>
-            <sign-in></sign-in>
-        </template>
 
         <backdrop v-show="backdrop"></backdrop>
         <alert v-show="alert.active" :alert="alert">
@@ -38,6 +37,10 @@
 
     </div>
 
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBxlzQBEBoxfFVyYfx93jHNT-E2bMQEfrA&libraries=&v=weekly"
+        async></script>
+
     <!-- template -->
     <script src="components.js" type="text/javascript"></script>
     <!-- Components -->
@@ -45,16 +48,14 @@
     <script src="components/map_components.js" type="text/javascript"></script>
     <script src="components/paths_components.js" type="text/javascript"></script>
     <script src="components/store_components.js" type="text/javascript"></script>
-    <script src="components/signin_components.js" type="text/javascript"></script>
+    <!-- routines -->
+    <script src="routines/js/maps.js" type="text/javascript"></script>
+    <script src="routines/js/session.js" type="text/javascript"></script>
+
     <script src="index.js" type="text/javascript"></script>
 
 
-    <!-- routines -->
-    <script src="routines/js/maps.js" type="text/javascript"></script>
 
-    <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBxlzQBEBoxfFVyYfx93jHNT-E2bMQEfrA&callback=initMap&libraries=&v=weekly"
-        async></script>
 
 </body>
 

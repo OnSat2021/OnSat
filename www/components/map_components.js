@@ -17,6 +17,7 @@ Vue.component('route-map', {
     },
     mounted() {
         this.currentSection = "/";
+        initMap();
     },
     template: `
         <section>    
@@ -30,7 +31,7 @@ Vue.component('route-map', {
 
 /** SELECTOR **/
 Vue.component('map-style-selector', {
-    data: function() {
+    data: function () {
         return {
             sections: [{
                     "label": "Classic",
@@ -62,7 +63,7 @@ Vue.component('map-style-selector', {
         }
     },
     methods: {
-        changeMap: function(section) {
+        changeMap: function (section) {
             this.selectedSection = section;
             app.print("Cambio mappa: " + section.value);
             map.setOptions({

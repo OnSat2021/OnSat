@@ -7,3 +7,6 @@ GET http://onsat.ongroup.cloud:8888 HTTP/1.1
 
 ###
 GET http://onsat.ongroup.cloud:8888/weather HTTP/1.1
+
+###
+GET https://onsat.ongroup.cloud/google-login HTTP/1.1

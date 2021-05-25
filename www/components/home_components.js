@@ -33,7 +33,7 @@ Vue.component('route-home', {
 
 /** SELECTOR **/
 Vue.component('home-selector', {
-    data: function() {
+    data: function () {
         return {
             sections: [{
                     "label": "Meteo",
@@ -60,7 +60,7 @@ Vue.component('home-selector', {
         }
     },
     methods: {
-        changeMap: function(section) {
+        changeMap: function (section) {
             this.$emit("update-section", section.path);
             this.selectedSection = section;
         }
@@ -97,7 +97,7 @@ Vue.component('user-section', {
 });
 Vue.component('logout-section', {
     template: `
-    <div class="relative top-0 left-0 h-full w-screen bg-dark text-white text-center font-bold flex flex-col justify-center">
+    <div onclick="logout()" class="relative top-0 left-0 h-full w-screen bg-dark text-white text-center font-bold flex flex-col justify-center">
     Logout
     </div>`
 });
