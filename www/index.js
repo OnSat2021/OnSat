@@ -74,7 +74,7 @@ var app = new Vue({
         }
     },
     mounted() {
-        this.currentRoute = "/";
+        this.currentRoute = "/paths";
     }
     /*
         render(h) {
@@ -94,7 +94,7 @@ function onSuccessDefault(obj) {
 function sendRequest(mode = 'POST', relative_path, json = {}, onSuccess = onSuccessDefault, onError = onErrorDefault) {
     var xhr = new XMLHttpRequest();
     let url = 'https://onsat.ongroup.cloud' + relative_path;
-    url = 'http://localhost:8888' + relative_path;
+    //url = 'http://localhost:8888' + relative_path;
     xhr.open(mode, url);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onload = function () {

@@ -143,7 +143,7 @@ Vue.component('catalog-section', {
     template: `
     <div class="relative top-0 left-0 h-full w-screen bg-dark text-white text-center font-bold flex flex-col justify-start">
         <section-header title="Catalogo" subtitle="Scopri i nostri prodotti"></section-header>
-        <product-card v-for="product in products" :key="product.product_id" :product="product" :selected-product="selectedProduct" ></product-card>
+        <product-card v-for="product in products" :key="product.id" :product="product" :selected-product="selectedProduct" ></product-card>
     </div>`
 });
 Vue.component('orders-section', {

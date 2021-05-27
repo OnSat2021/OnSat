@@ -6,7 +6,6 @@
     --navigation-bar-height: 4rem;
 }
 
-
 /** THEME **/
 
 .bg-dark {
@@ -21,18 +20,13 @@
     color: var(--theme-dark);
 }
 
-
 /* TEXT FIELDS */
 
 * {
     font-family: 'Sofia Pro';
 }
 
-h1,
-h2,
-h3,
-h4,
-h5 {
+h1, h2, h3, h4, h5 {
     font-family: 'Sofia Pro';
     color: white;
     font-style: normal;
@@ -54,7 +48,6 @@ h3 {
     font-size: 18px;
 }
 
-
 /* CUSTOM ELEMENTS */
 
 .alert {
@@ -71,8 +64,7 @@ h3 {
     text-align: center;
 }
 
-.alert h2,
-.alert h3 {
+.alert h2, .alert h3 {
     color: var(--theme-dark);
     margin: 1rem auto;
 }
@@ -103,23 +95,19 @@ h3 {
     color: white;
 }
 
-
 /**************/
 
-
 /* Enter and leave animations can use different */
-
 
 /* durations and timing functions.              */
 
 .fade-enter-active, .fade-leave-active {
     transition: opacity 0.25s ease-out;
-  }
-  
-  .fade-enter, .fade-leave-to {
-    opacity: 0;
-  }
+}
 
+.fade-enter, .fade-leave-to {
+    opacity: 0;
+}
 
 /****SECTION****/
 
@@ -135,6 +123,61 @@ h3 {
     padding-bottom: 5rem;
 }
 
+.section.no-selector {
+    top: 0!important;
+    height: calc(100vh - var(--navigation-bar-height))!important;
+    max-height: calc(100vh - var(--navigation-bar-height))!important;
+    overflow-y: scroll!important;
+}
+
 .navigation-bar {
     height: var(--navigation-bar-height)!important;
+    z-index: 5;
+}
+
+/* ROUTE CARD */
+
+.route-card * {
+    transition: all 0.3s ease!important;
+}
+
+.route-card {
+    height: 60vh;
+    min-height: 60vh;
+    width: 90vw;
+    z-index: 1;
+    will-change: transform;
+}
+
+.route-card:hover {
+    z-index: 2;
+    transform: scale(1);
+}
+
+.bg-route-shade {
+    background: linear-gradient(180deg, rgba(196, 196, 196, 0) 27.93%, #170F24 100%);
+}
+
+.ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 15;
+    /* number of lines to show */
+    -webkit-box-orient: vertical;
+}
+
+/*FLIPPING TRANSITION*/
+
+.flip-enter-active {
+    transition: all 0.4s ease;
+}
+
+.flip-leave-active {
+    display: none;
+}
+
+.flip-enter, .flip-leave {
+    transform: rotateY(180deg);
+    opacity: 0;
 }

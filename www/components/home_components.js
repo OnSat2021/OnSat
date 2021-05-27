@@ -98,7 +98,7 @@ Vue.component('user-section', {
 Vue.component('logout-section', {
     template: `
     <div onclick="logout()" class="relative top-0 left-0 h-full w-screen bg-dark text-white text-center font-bold flex flex-col justify-center">
-    Logout
+    Premi qui per eseguire il Logout
     </div>`
 });
 /** END PAGINE INTERNE **/

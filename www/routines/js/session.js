@@ -5,6 +5,6 @@ function logout() {
 
 function checkIfLoggedin() {
     if (window.localStorage.loggedin) {
-        //window.open('./index.html', '_self');
+        window.open('./index.html', '_self');
     }
 }
