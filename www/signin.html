@@ -15,10 +15,14 @@
     <script src="https://apis.google.com/js/platform.js"></script>
     <meta name="google-signin-client_id"
         content="478189077511-ddth5o4dvfa0n7gvjabdt7riv62fg09g.apps.googleusercontent.com">
+
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 
 <body>
-    <div id="app" class="w-screen h-screen absolute bg-dark top-0 left-0">
+    <img src="./src/imgs/421x852.png" class="phone">
+    <div id="app" class="main-container wh-custom-screen absolute bg-dark top-0 left-0">
 
         <template>
             <sign-in></sign-in>
@@ -26,10 +30,23 @@
 
         <backdrop v-show="backdrop"></backdrop>
         <alert v-show="alert.active" :alert="alert">
-            <flat-button v-if="alert.button" :label="alert.button" mode="dark" onclick="app.alertDismiss()">
+            <flat-button v-if="alert.button" :label="alert.button" mode="dark" onclick="on_ok()">
+            </flat-button>
+            <flat-button v-if="alert.ko_label" :label="alert.ko_label" mode="light" onclick="on_ko()">
             </flat-button>
         </alert>
         <loader v-show="loader.active" :loader="loader"></loader>
+        <div id="splashscreen"
+            class="transition-opacity duration-500 opacity-100 absolute top-0 left-0 w-full h-full bg-dark flex flex-col text-center justify-center">
+            <img class="m-auto w-2/3" src="./src/imgs/logo.png">
+        </div>
+
+        <div class="app-description flex flex-col justify-end text-left">
+            <span class="flex flex-col justify-center py-4">
+                <div class="font-normal my-0 py-0 text-sm">Designed by</div>
+                <div class="font-bold my-0 py-0 text-md">Filippo Carboni</div>
+            </span>
+        </div>
     </div>
 
     <!-- template -->

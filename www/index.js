@@ -1,3 +1,6 @@
+//var SERVER_NAME = 'https://onsat.ongroup.cloud';
+var SERVER_NAME = "http://localhost:8888";
+
 var app = new Vue({
     el: "#app",
     data: {
@@ -19,9 +22,12 @@ var app = new Vue({
             "message": "Alert",
             "body": "Descrizione",
             "button": null,
-            "active": false
+            "active": false,
+            "on_ok": null,
+            "ko_label": ''
         },
-        modal: null
+        modal: null,
+        bikes: []
     },
     methods: {
         /** LOADER **/
@@ -35,20 +41,28 @@ var app = new Vue({
             setTimeout(function () {
                 self.print("Dismetti Loader");
                 self.loader.active = false;
-            }, 800);
+            }, 500);
         },
         /** ALERT **/
-        alertPresent(message, body, button = null) {
+        alertPresent(message, body, button = null, json = {}) {
             this.print("Presenta Alert");
             this.alert.message = message;
             this.alert.body = body;
             this.alert.button = button;
             this.alert.active = true;
+            if (json.ok_function) {
+                this.alert.on_ok = json.ok_function;
+            }
+            if (json.ko_label) {
+                this.alert.ko_label = json.ko_label;
+            }
         },
         alertDismiss() {
             this.print("Dismetti Alert");
             this.alert.active = false;
             this.alert.button = null;
+            this.alert.on_ok = null;
+            this.alert.ko_label = '';
         },
         /** ROUTINES **/
         print(log) {
@@ -74,7 +88,14 @@ var app = new Vue({
         }
     },
     mounted() {
-        this.currentRoute = "/paths";
+        this.currentRoute = "/";
+        setTimeout(() => {
+            $('#splashscreen').addClass('opacity-0');
+            $('#splashscreen').removeClass('opacity-100');
+            setTimeout(() => {
+                $('#splashscreen').hide();
+            }, 500);
+        }, 1500);
     }
     /*
         render(h) {
@@ -93,12 +114,26 @@ function onSuccessDefault(obj) {
 
 function sendRequest(mode = 'POST', relative_path, json = {}, onSuccess = onSuccessDefault, onError = onErrorDefault) {
     var xhr = new XMLHttpRequest();
-    let url = 'https://onsat.ongroup.cloud' + relative_path;
-    //url = 'http://localhost:8888' + relative_path;
+    let url = "";
+    url += SERVER_NAME;
+    url += relative_path;
+
+    if (mode == 'GET') {
+        url += '?' + serialize(json);
+    }
+
+    try {
+        app.loaderPresent();
+    } catch (e) {}
+
     xhr.open(mode, url);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onload = function () {
         let reply = xhr.responseText;
+        try {
+            app.loaderDismiss();
+        } catch (e) {}
+
         try {
             var obj = JSON.parse(reply);
             console.log(obj);
@@ -122,4 +157,14 @@ function getParams() {
         }
     }
     return args;
+}
+
+
+function serialize(obj) {
+    var str = [];
+    for (var p in obj)
+        if (obj.hasOwnProperty(p)) {
+            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+        }
+    return str.join("&");
 }
