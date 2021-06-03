@@ -38,7 +38,7 @@ var app = new Vue({
         },
         loaderDismiss() {
             let self = this;
-            setTimeout(function () {
+            setTimeout(function() {
                 self.print("Dismetti Loader");
                 self.loader.active = false;
             }, 500);
@@ -128,7 +128,7 @@ function sendRequest(mode = 'POST', relative_path, json = {}, onSuccess = onSucc
 
     xhr.open(mode, url);
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.onload = function () {
+    xhr.onload = function() {
         let reply = xhr.responseText;
         try {
             app.loaderDismiss();
@@ -168,3 +168,21 @@ function serialize(obj) {
         }
     return str.join("&");
 }
+
+window.addEventListener('DOMContentLoaded', (event) => {
+    const params = getParams();
+    console.log("Parametri ricevuti: ");
+    console.log(params);
+    if (params.paymentStatus) {
+        if (params.paymentStatus == 'failed') {
+            app.alertPresent('Errore', 'Pagamento non andato a buon fine', 'ok');
+            navigationBar.goTo(navigationBar.sections[3]);
+            STORE_SELECTOR.changeMap(STORE_SELECTOR.sections[2]);
+        } else if (params.paymentStatus == 'succeded') {
+            STORE.cart = [];
+            window.localStorage.cart = JSON.stringify(STORE.cart);
+            navigationBar.goTo(navigationBar.sections[3]);
+            STORE_SELECTOR.changeMap(STORE_SELECTOR.sections[1]);
+        }
+    }
+});

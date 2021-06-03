@@ -1,12 +1,13 @@
-let created = async function () {
+let created = async function() {
     await setTimeout(null, 0);
     this.selectedSection = this.sections[0];
     this.$emit("update-section", this.selectedSection.path);
 };
 
 
-var navigationBar = Vue.component('navigation-bar', {
-    data: function () {
+var navigationBar;
+Vue.component('navigation-bar', {
+    data: function() {
         return {
             sections: [{
                     "label": "Home",
@@ -48,13 +49,15 @@ var navigationBar = Vue.component('navigation-bar', {
         }
     },
     methods: {
-        goTo: function (section) {
+        goTo(section) {
             this.selectedSection = section;
             app.print("Navigo verso: " + section.path);
             app.currentRoute = section.path;
         }
     },
-    created,
+    mounted() {
+        navigationBar = this;
+    },
     template: `
         <div class="navigation-bar select-none flex flex-row h-16 wh-custom-screen bg-dark absolute bottom-0 left-0 justify-center rounded-t-xl">
             <div v-for="section in sections" :class="sectionClass(section)" class="cursor-pointer flex flex-col h-full bg-transparent w-20 mx-2 mt-0 justify-center rounded-xl transition-all duration-500 ease-in-out" @click="goTo(section)">

@@ -31,7 +31,7 @@ Vue.component('route-home', {
 
 /** SELECTOR **/
 Vue.component('home-selector', {
-    data: function () {
+    data: function() {
         return {
             sections: [{
                     "label": "Meteo",
@@ -54,7 +54,7 @@ Vue.component('home-selector', {
         }
     },
     methods: {
-        changeMap: function (section) {
+        changeMap: function(section) {
             this.$emit("update-section", section.path);
             this.selectedSection = section;
         }
@@ -72,11 +72,142 @@ Vue.component('home-selector', {
 
 /** PAGINE INTERNE **/
 Vue.component('weather-section', {
+    data() {
+        return {
+            weatherList: [],
+            selectedWeather: null,
+            city: '',
+        }
+    },
+    methods: {
+        selectWeather(weather) {
+            this.selectedWeather = weather;
+        },
+        getWeather() {
+            let self = this;
+            sendRequest('GET', '/weather', {}, json => {
+                let meteo = {};
+                let firstime = true;
+                self.city = json.city.name;
+                json.list.forEach(el => {
+                    const time = timeConverter(el.dt);
+                    const index = time.day + ' ' + time.date + ' ' + time.month;
+                    if (!meteo.hasOwnProperty(index))
+                        meteo[index] = {
+                            name: index
+                        };
+                    if (!meteo[index].hasOwnProperty('list'))
+                        meteo[index].list = [];
+                    const ore = [9, 12, 15, 18, 21];
+                    if (ore.includes(time.hour)) {
+                        const item = {
+                            dt: el.dt,
+                            description: el.weather[0].description,
+                            date: index,
+                            hour: time.hour,
+                            feels_like: el.main.feels_like,
+                            temp: el.main.temp,
+                            temp_max: el.main.temp_max,
+                            temp_min: el.main.temp_min,
+                            humidity: el.main.humidity,
+                            icon: 'http://openweathermap.org/img/w/' + el.weather[0].icon + '.png'
+                        };
+
+                        if (firstime) {
+                            self.selectedWeather = item;
+                            firstime = false;
+                        }
+
+                        meteo[index].list.push(item);
+                        console.log(el.main);
+                    }
+
+                });
+                self.weatherList = meteo;
+            });
+        }
+    },
+    mounted() {
+        this.getWeather();
+    },
     template: `
-    <div class="relative top-0 left-0 h-full w-full bg-dark text-white text-center font-bold flex flex-col justify-center">
-    Weather
+    <div class="relative top-0 left-0 h-full w-full bg-dark text-white text-center font-bold flex flex-col justify-start p-4 pt-0">
+        <div class="sticky z-40 top-0 bg-dark w-full" style="min-height: 1rem"></div>
+        <div v-if="selectedWeather" class="opacity-100 z-50 sticky top-4 rounded-3xl bg-light w-full my-6 p-4 flex flex-row justify-evenly">
+            <span class="flex flex-col justify-center text-center w-1/2">
+                <img class="w-24 h-24 mx-auto" :src="selectedWeather.icon">
+                <span class="text-md capitalize opacity-40">MAX: {{selectedWeather.temp_max}}°</span>
+                <span class="text-md capitalize opacity-40">MIN: {{selectedWeather.temp_min}}°</span>
+            </span> 
+            <span class="z-30 flex flex-col justify-center text-left w-1/2">
+                <span class="text-2xl">{{city}}</span>
+                <span class="text-md">{{selectedWeather.date}}</span>
+                <span class="text-4xl opacity-100 font-semibold py-2 text-blue-400">{{selectedWeather.feels_like}}°</span>
+                <span class="text-md capitalize">{{selectedWeather.description}}</span>
+            </span> 
+        </div>
+        <weather-list :list="weatherList" @selectedWeather="selectWeather"></weather-list>
     </div>`
 });
+
+
+Vue.component('weather-list', {
+    props: ['list'],
+    methods: {
+        selectWeather(hour) {
+            console.log(hour);
+            this.$emit('selectedWeather', hour);
+        }
+
+    },
+    template: `
+        <span>
+            <div v-for="day in list" class="flex flex-col justify-start my-4">
+                <span class="text-lg text-center">{{day.name}}</span>
+
+                <span class="text-left text-md flex flex-row justify-evenly">
+                    <span class="text-left text-md flex flex-col justify-between mr-2">
+                        <img src="" class="w-2 h-12 opacity-0">
+                        <span class="capitalize text-2xs text-center material-icons">thermostat</span>
+                        <span class="capitalize text-2xs text-center material-icons">water_drop</span>
+                        <span class="capitalize text-2xs text-center material-icons mb-2">schedule</span>
+                    </span>
+                    <span v-for="hour in day.list" class="hover:bg-light cursor-pointer border-l-0 border-white border-opacity-20 px-1 text-left text-md flex flex-col justify-evenly w-1/6" :key="hour.dt" @click="selectWeather(hour)">
+                        <img :src="hour.icon">
+                        <span class="capitalize text-sm">{{hour.feels_like}}°</span>
+                        <span class="capitalize text-xs opacity-40">{{hour.humidity}}%</span>
+                        <span class="capitalize text-md">{{hour.hour}}</span>
+                    </span>
+                </span>
+            </div>
+        </span>
+    `
+});
+
+function timeConverter(UNIX_timestamp) {
+    UNIX_timestamp -= (60 * 60 * 2);
+    var a = new Date(UNIX_timestamp * 1000);
+    var months = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+    var days = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
+    var year = a.getFullYear();
+    var month = months[a.getMonth()];
+    var date = a.getDate();
+    var hour = a.getHours();
+    var min = a.getMinutes();
+    var sec = a.getSeconds();
+    var day = days[a.getDay()];
+    //var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec;
+    var time = {
+        year: year,
+        month: month,
+        date: date,
+        hour: hour,
+        min: min,
+        sec: sec,
+        day: day
+    };
+    return time;
+}
 
 Vue.component('bikes-section', {
     data: () => {

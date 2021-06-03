@@ -6,7 +6,8 @@
     --navigation-bar-height: 4rem;
 }
 
-div, span {
+div,
+span {
     -webkit-touch-callout: none;
     /* iOS Safari */
     -webkit-user-select: none;
@@ -22,6 +23,7 @@ div, span {
                                     supported by Chrome, Edge, Opera and Firefox */
 }
 
+
 /** THEME **/
 
 .bg-dark {
@@ -36,13 +38,23 @@ div, span {
     color: var(--theme-dark);
 }
 
+.text-2xs {
+    font-size: 0.625rem!important;
+    line-height: 0.75rem!important;
+}
+
+
 /* TEXT FIELDS */
 
 * {
     font-family: 'Sofia Pro';
 }
 
-h1, h2, h3, h4, h5 {
+h1,
+h2,
+h3,
+h4,
+h5 {
     font-family: 'Sofia Pro';
     color: white;
     font-style: normal;
@@ -63,6 +75,7 @@ h3 {
     font-weight: 500;
     font-size: 18px;
 }
+
 
 /* CUSTOM ELEMENTS */
 
@@ -102,19 +115,25 @@ h3 {
     color: white;
 }
 
+
 /**************/
+
 
 /* Enter and leave animations can use different */
 
+
 /* durations and timing functions.              */
 
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
     transition: opacity 0.25s ease-out;
 }
 
-.fade-enter, .fade-leave-to {
+.fade-enter,
+.fade-leave-to {
     opacity: 0;
 }
+
 
 /****SECTION****/
 
@@ -143,9 +162,11 @@ h3 {
     z-index: 5;
 }
 
+
 /* ROUTE CARD */
 
-.route-card *, bike-card * {
+.route-card *,
+bike-card * {
     transition: all 0.6s ease!important;
 }
 
@@ -187,6 +208,7 @@ h3 {
     -webkit-box-orient: vertical;
 }
 
+
 /*FLIPPING TRANSITION*/
 
 .flip-enter-active {
@@ -197,10 +219,12 @@ h3 {
     display: none;
 }
 
-.flip-enter, .flip-leave {
+.flip-enter,
+.flip-leave {
     transform: rotateY(180deg);
     opacity: 0;
 }
+
 
 /* DESKTOP */
 
@@ -223,7 +247,7 @@ h3 {
 }
 
 @media screen and (min-width: 600px) {
-    :root {
+     :root {
         --vh: 812px;
         --vw: 375px;
     }
@@ -279,13 +303,16 @@ h3 {
     }
 }
 
+
 /*SCROLLBAR*/
+
 
 /* width */
 
 ::-webkit-scrollbar {
     width: 3px;
 }
+
 
 /* Track */
 
@@ -294,12 +321,14 @@ h3 {
     border-radius: 10px;
 }
 
+
 /* Handle */
 
 ::-webkit-scrollbar-thumb {
     background: white;
     border-radius: 7px;
 }
+
 
 /* The container must be positioned relative: */
 
@@ -317,6 +346,7 @@ h3 {
     background-color: DodgerBlue;
 }
 
+
 /* Style the arrow inside the select element: */
 
 .select-selected:after {
@@ -330,6 +360,7 @@ h3 {
     border-color: #fff transparent transparent transparent;
 }
 
+
 /* Point the arrow upwards when the select box is open (active): */
 
 .select-selected.select-arrow-active:after {
@@ -337,15 +368,18 @@ h3 {
     top: 7px;
 }
 
+
 /* style the items (options), including the selected item: */
 
-.select-items div, .select-selected {
+.select-items div,
+.select-selected {
     color: #ffffff;
     padding: 8px 16px;
     border: 1px solid transparent;
     border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
     cursor: pointer;
 }
+
 
 /* Style items (options): */
 
@@ -358,12 +392,14 @@ h3 {
     z-index: 99;
 }
 
+
 /* Hide the items when the select box is closed: */
 
 .select-hide {
     display: none;
 }
 
-.select-items div:hover, .same-as-selected {
+.select-items div:hover,
+.same-as-selected {
     background-color: rgba(0, 0, 0, 0.1);
 }

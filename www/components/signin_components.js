@@ -59,4 +59,5 @@ window.addEventListener('DOMContentLoaded', (event) => {
             oauthCreateToken(params.code);
         }
     }
+
 });
