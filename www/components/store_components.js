@@ -101,6 +101,7 @@ Vue.component('route-store', {
                 @remove-from-cart="removeFromCart"
                 v-show="checkSection('/cart')">
             </cart-section>
+
             <store-selector class="selector" @update-section="updateCurrentSection"></store-selector>
         </div>`
 });
@@ -161,6 +162,8 @@ Vue.component('catalog-section', {
         <product-card v-for="product in products" :key="product.id" :product="product" :selected-product="selectedProduct" ></product-card>
     </div>`
 });
+
+var ORDERS;
 Vue.component('orders-section', {
     data() {
         return {
@@ -171,14 +174,76 @@ Vue.component('orders-section', {
         goToCart() {
             console.log(STORE_SELECTOR);
             STORE_SELECTOR.changeMap(STORE_SELECTOR.sections[0]);
+        },
+        getOrders() {
+            let self = this;
+            sendRequest('GET', '/order', {
+                user_id: window.localStorage.user_id
+            }, json => {
+                if (json.error_code) {
+                    console.log(json.error_desc);
+                } else {
+                    self.orders = json.result;
+                }
+            });
+        },
+        totalPrice(order) {
+            return parseFloat(order.quantity * order.product.price).toFixed(2);
+        },
+        formatTimestamp(timestamp) {
+            const a = new Date(timestamp);
+            var months = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+            var days = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
+            var year = a.getFullYear();
+            var month = months[a.getMonth()];
+            var date = a.getDate();
+            var hour = a.getHours();
+            var min = a.getMinutes();
+            var sec = a.getSeconds();
+            var day = days[a.getDay()];
+            //var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec;
+            var time = {
+                year: year,
+                month: month,
+                date: date,
+                hour: hour,
+                min: min,
+                sec: sec,
+                day: day
+            };
+            return time.date + ' ' + time.month + ' ' + time.year;
         }
+    },
+    computed: {
+
+    },
+    mounted() {
+        ORDERS = this;
+        this.getOrders();
     },
     template: `
         <div class="relative top-0 left-0 h-full w-full bg-dark text-white text-center font-bold flex flex-col justify-start">
         <section-header title="Ordini" subtitle="Vedi i tuoi ordini"></section-header>
-        <div v-show="orders.length == 0" class="text-white text-md h-full w-full text-center font-normal flex flex-col justify-center">
+        <div v-if="orders.length == 0" class="text-white text-md h-full w-full text-center font-normal flex flex-col justify-center">
             Non ci sono ordini
             <span class="cursor-pointer font-bold" @click="goToCart()">Vai al catalogo</span>
+        </div>
+        <div v-else>
+            <div v-for="order in orders" class="w-10/12 bg-light mx-auto my-2 rounded-xl flex flex-row flex-wrap py-5">
+
+                <div class="cursor-pointer w-1/3 flex text-center flex-col justify-center">
+                    <img class="h-auto w-auto mx-4" :src="order.product.picture">
+                </div>
+                <div class="cursor-pointer w-2/3 flex text-left flex-col justify-center">
+                    <span class="text-white text-sm font-bold"><span class="text-green-300 font-bold">{{order.quantity}}x </span>{{order.product.name}}</span>
+                    <span class="text-white text-2xl font-normal">€ {{totalPrice(order)}}</span>
+                    <span class="text-green-300 text-md font-normal">{{order.status.label}}</span>
+                    <span class="text-white text-sm font-normal">{{formatTimestamp(order.timestamp)}}</span>
+                </div>
+
+            </div>
+
+
         </div>
         </div>`
 });
@@ -186,7 +251,10 @@ Vue.component('cart-section', {
     props: ['cart'],
     data() {
         return {
-            stripe: null
+            payment: false,
+            stripe: null,
+            user: {},
+            card: null
         }
     },
     methods: {
@@ -201,7 +269,7 @@ Vue.component('cart-section', {
             console.log(STORE_SELECTOR);
             STORE_SELECTOR.changeMap(STORE_SELECTOR.sections[0]);
         },
-        checkout() {
+        checkout_old() {
             let self = this;
             sendRequest('POST', '/create-checkout-session', {
                 cart: self.cart,
@@ -210,49 +278,183 @@ Vue.component('cart-section', {
                 return self.stripe.redirectToCheckout({
                     sessionId: obj.result.session_id
                 }).then(function (result) {
-                    // If `redirectToCheckout` fails due to a browser or network
-                    // error, you should display the localized error message to your
-                    // customer using `error.message`.
                     if (result.error) {
                         app.alertPresent('Errore elaborazione', result.error.message);
                     }
                 });
             });
+        },
+        checkout() {
+            app.loaderPresent();
+            var form = document.getElementById('payment_form');
+            let fd = new FormData(form);
+            var object = {};
+            fd.forEach((value, key) => object[key] = value);
+            object.cart = this.cart;
+            object.user_id = window.localStorage.user_id;
+            var self = this;
+
+            sendRequest('POST', '/stripe-payment-intent', object, json => {
+                app.loaderPresent();
+                if (json.error_code) {
+                    app.alertPresent('Errore', json.error_desc, 'ok');
+                    app.loaderDismiss();
+                } else {
+                    const clientSecret = json.result.client_secret;
+                    self.stripe.confirmCardPayment(clientSecret, {
+                        payment_method: {
+                            card: this.card,
+                            billing_details: {
+                                name: object.name
+                            }
+                        }
+                    }).then(function (result) {
+                        if (result.error) {
+                            // Show error to your customer (e.g., insufficient funds)
+                            console.log(result.error.message);
+                            app.alertPresent('Errore', result.error.message, 'ok');
+                            ORDERS.getOrders();
+                        } else {
+                            // The payment has been processed!
+                            if (result.paymentIntent.status === 'succeeded') {
+                                app.alertPresent('Successo', 'Pagamento andato a buon fine', 'ok');
+                                ORDERS.getOrders();
+                                STORE.cart = [];
+                                if (STORE.cart != [])
+                                    window.localStorage.cart = JSON.stringify(STORE.cart);
+                                STORE_SELECTOR.changeMap(STORE_SELECTOR.sections[1]);
+                                self.cancelPayment();
+                            }
+                        }
+                        app.loaderDismiss();
+                    });
+                }
+            });
+
+        },
+        pay() {
+            this.payment = true;
+            let stripe = this.stripe;
+            var elements = stripe.elements();
+            var style = {
+                base: {
+                    color: "white",
+                }
+            };
+
+            this.card = elements.create("card", {
+                style: style
+            });
+
+            this.card.on('change', function (event) {
+                var displayError = document.getElementById('card-errors');
+                if (event.error) {
+                    displayError.textContent = event.error.message;
+                } else {
+                    displayError.textContent = '';
+                }
+            });
+
+            let self = this;
+            setTimeout(() => {
+                self.card.mount("#card-element");
+            }, 1000);
+
+
+        },
+        cancelPayment() {
+            this.card = null;
+            this.clientSecret = null;
+            this.payment = false;
         }
     },
     mounted() {
         this.stripe = Stripe('pk_test_YmmQsGhT16UwyRWxaOcd7Eyf00xYOJoN5y');
+        sendRequest('GET', '/user', {
+            user_id: window.localStorage.user_id
+        }, obj => {
+            if (obj.error_code)
+                app.alertPresent("Errore", obj.error_desc, 'Ok');
+            else
+                this.user = obj.result
+        });
     },
     computed: {
-        cartTotal() {
+        cartTotalValue() {
             let total = 0;
             this.cart.forEach(item => {
                 total += item.product.price * item.quantity;
             });
-            return "Totale carrello: <b>€ " + parseFloat(total).toFixed(2) + "</b>";
+            return parseFloat(total).toFixed(2);
+        },
+        cartTotal() {
+            return "Totale carrello: <b>€ " + this.cartTotalValue + "</b>";
+        },
+        cartTitle() {
+            return this.payment ? 'Checkout' : 'Carrello';
+        },
+        name() {
+            if (!this.user.hasOwnProperty('name')) return '';
+            return this.user.name + ' ' + this.user.surname;
+        },
+        address() {
+            if (!this.user.hasOwnProperty('address')) return '';
+            return this.user.address;
         }
     },
     template: `
-        <div class="relative top-0 left-0 h-full w-full bg-dark text-white text-center font-bold flex flex-col justify-start">
-            <section-header title="Carrello" :subtitle="cartTotal"></section-header>
-            <div v-for="item in cart">
-                <div class="w-10/12 bg-light mx-auto my-2 rounded-xl flex flex-row flex-wrap py-5 relative">
-                    <div class="w-1/2 flex text-center flex-col justify-center">
-                        <img class="h-auto w-auto mx-4" :src="item.product.picture">
+        <div class="relative top-0 left-0 h-full w-full bg-dark text-white text-center font-bold flex flex-col justify-between pb-4">
+            <section-header :title="cartTitle" :subtitle="cartTotal"></section-header>
+            
+            <template v-if="!payment">
+                <div v-for="item in cart">
+                    <div class="w-10/12 bg-light mx-auto my-2 rounded-xl flex flex-row flex-wrap py-5 relative">
+                        <div class="w-1/2 flex text-center flex-col justify-center">
+                            <img class="h-auto w-auto mx-4" :src="item.product.picture">
+                        </div>
+                        <div class="w-1/2 flex text-left flex-col justify-center">
+                            <span class="text-white text-sm font-bold"><span class="text-lg text-green-300">{{item.quantity}}x</span> {{item.product.name}}</span>
+                            <span class="text-white text-2xl font-normal">€ {{totalPrice(item)}}</span>
+                            <span class="text-white text-sm font-bold">€ {{item.product.price}} cad.</span>
+                        </div>
+                        <span class="cursor-pointer absolute top-0 right-0 -mt-2 -mr-2 text-red-500 bg-white rounded-3xl p-2 material-icons" @click="removeFromCart(item)">delete</span>
                     </div>
-                    <div class="w-1/2 flex text-left flex-col justify-center">
-                        <span class="text-white text-sm font-bold"><span class="text-lg text-green-300">{{item.quantity}}x</span> {{item.product.name}}</span>
-                        <span class="text-white text-2xl font-normal">€ {{totalPrice(item)}}</span>
-                        <span class="text-white text-sm font-bold">€ {{item.product.price}} cad.</span>
-                    </div>
-                    <span class="cursor-pointer absolute top-0 right-0 -mt-2 -mr-2 text-red-500 bg-white rounded-3xl p-2 material-icons" @click="removeFromCart(item)">delete</span>
                 </div>
-            </div>
-            <flat-button @click="checkout()" class="mb-2" v-if="cart.length > 0" label="vai al pagamento" mode="light"></flat-button>
-            <div v-show="cart.length == 0" class="text-white text-md h-full w-full text-center font-normal flex flex-col justify-center">
-                Il carrello è vuoto
-                <span class="cursor-pointer font-bold" @click="goToCart()">Vai al catalogo</span>
-            </div>
+                <flat-button @click="pay()" class="mb-2" v-if="cart.length > 0" label="vai al pagamento" mode="light"></flat-button>
+                <div v-show="cart.length == 0" class="text-white text-md h-full w-full text-center font-normal flex flex-col justify-center">
+                    Il carrello è vuoto
+                    <span class="cursor-pointer font-bold" @click="goToCart()">Vai al catalogo</span>
+                </div>
+            </template>
+
+            <template v-else-if="payment">
+                <span class="flex flex-col justify-between h-full">
+                    <form id="payment_form" method="POST">
+                        <input-field class="hidden" name="subtotal" label="Totale" placeholder="" :value="cartTotalValue" type="text"></input-field>
+                        <input-field name="name" label="Nominativo" placeholder="" :value="name" type="text"></input-field>
+                        <input-field name="cf" label="Codice Fiscale/P. IVA" placeholder="" value="" type="text"></input-field>
+                        <input-field name="address" label="Indirizzo" placeholder="" :value="address" type="text"></input-field>
+                        
+                        <div class="relative w-full text-left text-white flex flex-col justify-center px-8 my-2">
+                            <div id="card-element" class="placeholder-dark placeholder-opacity-60 bg-light my-1 px-4 py-6 border-none focus:outline-none rounded-2xl text-lg font-semibold">
+                                <!-- Elements will create input elements here -->
+                            </div>
+                        </div>
+
+                        <!-- We'll put the error messages in this element -->
+                        <div class="relative w-full text-left text-white flex flex-col justify-center px-8 my-2">
+                            <div id="card-errors" role="alert" class="placeholder-dark placeholder-opacity-60 bg-transparent my-1 px-4 py-6 border-none focus:outline-none rounded-2xl text-red-200 text-lg text-center font-semibold"></div>
+                        </div>
+                    
+                    </form>
+                    <span>
+                        <flat-button @click="checkout()" label="paga" class="mb-1"></flat-button>
+                        <div @click="cancelPayment()" class="cursor-pointer mt-0 mb-4 p-3 text-white text-md">annulla</div>
+                    </span>
+                </span>
+        </template>
+
+
         </div>`
 });
 /** END PAGINE INTERNE **/

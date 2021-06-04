@@ -31,7 +31,7 @@ Vue.component('route-home', {
 
 /** SELECTOR **/
 Vue.component('home-selector', {
-    data: function() {
+    data: function () {
         return {
             sections: [{
                     "label": "Meteo",
@@ -42,7 +42,7 @@ Vue.component('home-selector', {
                     "path": "bikes"
                 },
                 {
-                    "label": "Profilo",
+                    "label": "Impostazioni",
                     "path": "user"
                 }
             ],
@@ -54,12 +54,14 @@ Vue.component('home-selector', {
         }
     },
     methods: {
-        changeMap: function(section) {
+        changeMap: function (section) {
             this.$emit("update-section", section.path);
             this.selectedSection = section;
         }
     },
-    created,
+    mounted() {
+        HOME_SELECTOR = this;
+    },
     template: `
         <div class="select-none flex flex-row h-10 w-full bg-dark absolute top-0 left-0 justify-center">
             <div v-for="section in sections" class="cursor-pointer flex flex-col h-full bg-transparent w-20 mx-2 bottom-0 justify-center rounded-b-xl transition-all duration-500 ease-in-out" @click="changeMap(section)">
@@ -68,6 +70,9 @@ Vue.component('home-selector', {
         </div>
     `
 });
+
+var HOME_SELECTOR;
+
 /** END SELECTOR **/
 
 /** PAGINE INTERNE **/
@@ -105,11 +110,11 @@ Vue.component('weather-section', {
                             description: el.weather[0].description,
                             date: index,
                             hour: time.hour,
-                            feels_like: el.main.feels_like,
-                            temp: el.main.temp,
-                            temp_max: el.main.temp_max,
-                            temp_min: el.main.temp_min,
-                            humidity: el.main.humidity,
+                            feels_like: parseFloat(el.main.feels_like).toFixed(0),
+                            temp: parseFloat(el.main.temp).toFixed(0),
+                            temp_max: parseFloat(el.main.temp_max).toFixed(0),
+                            temp_min: parseFloat(el.main.temp_min).toFixed(0),
+                            humidity: parseFloat(el.main.humidity).toFixed(0),
                             icon: 'http://openweathermap.org/img/w/' + el.weather[0].icon + '.png'
                         };
 
@@ -131,52 +136,79 @@ Vue.component('weather-section', {
         this.getWeather();
     },
     template: `
-    <div class="relative top-0 left-0 h-full w-full bg-dark text-white text-center font-bold flex flex-col justify-start p-4 pt-0">
-        <div class="sticky z-40 top-0 bg-dark w-full" style="min-height: 1rem"></div>
-        <div v-if="selectedWeather" class="opacity-100 z-50 sticky top-4 rounded-3xl bg-light w-full my-6 p-4 flex flex-row justify-evenly">
-            <span class="flex flex-col justify-center text-center w-1/2">
-                <img class="w-24 h-24 mx-auto" :src="selectedWeather.icon">
-                <span class="text-md capitalize opacity-40">MAX: {{selectedWeather.temp_max}}°</span>
-                <span class="text-md capitalize opacity-40">MIN: {{selectedWeather.temp_min}}°</span>
-            </span> 
-            <span class="z-30 flex flex-col justify-center text-left w-1/2">
-                <span class="text-2xl">{{city}}</span>
-                <span class="text-md">{{selectedWeather.date}}</span>
-                <span class="text-4xl opacity-100 font-semibold py-2 text-blue-400">{{selectedWeather.feels_like}}°</span>
-                <span class="text-md capitalize">{{selectedWeather.description}}</span>
-            </span> 
+    <div class="relative top-0 left-0 h-full w-full bg-light text-white text-center font-bold flex flex-col justify-start p-4 pt-0">
+        <div class="sticky z-40 top-0 bg-light w-full" style="min-height: 2rem"></div>
+        <div v-if="selectedWeather" class="opacity-100 z-50 sticky top-4 rounded-3xl bg-dark w-full my-6 p-4 py-12 flex flex-col justify-center shadow-2xl">
+           
+            <span class="flex flex-row justify-evenly">
+                
+                <!--span class="text-4xl opacity-100 font-light py-2 text-white h-full flex flex-col justify-center text-center px-4 w-1/3 text-indigo-300">{{selectedWeather.feels_like}}°</span-->
+
+                <span class="flex flex-col justify-center text-center w-1/3">
+                    <img class="w-18 h-18 mx-auto" :src="selectedWeather.icon">
+                    <span class="text-md capitalize opacity-40 font-light text-left pl-6"></span>
+                </span>
+
+                <span class="z-30 flex flex-col justify-center text-left w-2/3 border-l-2 pl-4 border-dark">
+                    <span class="text-3xl"><span class="text-white opacity-40">{{selectedWeather.feels_like}}°</span> {{city}}</span>
+                    <span class="text-md capitalize">{{selectedWeather.description}}</span>
+                    <span class="text-xs opacity-40 font-light"><span class="capitalize">{{selectedWeather.date}}</span> ore {{selectedWeather.hour}}</span>
+                    <span class="text-xs capitalize opacity-40 font-light">MIN: {{selectedWeather.temp_min}}° / MAX: {{selectedWeather.temp_max}}°</span>
+                </span> 
+
+            </span>
+
         </div>
-        <weather-list :list="weatherList" @selectedWeather="selectWeather"></weather-list>
+        <weather-list :list="weatherList" :selectedWeather="selectedWeather" @selectedWeather="selectWeather"></weather-list>
     </div>`
 });
 
 
 Vue.component('weather-list', {
-    props: ['list'],
+    props: ['list', 'selectedWeather'],
     methods: {
         selectWeather(hour) {
             console.log(hour);
             this.$emit('selectedWeather', hour);
-        }
+        },
+        selectedStyle(weather) {
+            if (weather.dt == this.selectedWeather.dt) {
+                return 'bg-dark rounded-xl';
+            }
+            return '';
+        },
+        emptyHours(hours) {
 
+            return 5 - hours.length;
+        },
+        isListEmpty(list) {
+            console.log(list);
+            return (list.list.length > 0) ? true : false;
+        }
     },
     template: `
         <span>
-            <div v-for="day in list" class="flex flex-col justify-start my-4">
-                <span class="text-lg text-center">{{day.name}}</span>
+            <div v-if="emptyHours(day.list) != 5" v-for="day in list" class="flex flex-col justify-start my-4">
+                <span class="text-lg text-center mb-2">{{day.name}}</span>
 
                 <span class="text-left text-md flex flex-row justify-evenly">
-                    <span class="text-left text-md flex flex-col justify-between mr-2">
+                    <span class="text-left text-md flex flex-col justify-between mr-2 py-2">
                         <img src="" class="w-2 h-12 opacity-0">
                         <span class="capitalize text-2xs text-center material-icons">thermostat</span>
                         <span class="capitalize text-2xs text-center material-icons">water_drop</span>
                         <span class="capitalize text-2xs text-center material-icons mb-2">schedule</span>
                     </span>
-                    <span v-for="hour in day.list" class="hover:bg-light cursor-pointer border-l-0 border-white border-opacity-20 px-1 text-left text-md flex flex-col justify-evenly w-1/6" :key="hour.dt" @click="selectWeather(hour)">
-                        <img :src="hour.icon">
-                        <span class="capitalize text-sm">{{hour.feels_like}}°</span>
-                        <span class="capitalize text-xs opacity-40">{{hour.humidity}}%</span>
-                        <span class="capitalize text-md">{{hour.hour}}</span>
+                    <span v-for="hour in emptyHours(day.list)" class="py-2 cursor-pointer border-l-0 border-white border-opacity-20 px-1 text-left text-md flex flex-col justify-evenly w-1/6">
+                        <img src="">
+                        <span class="capitalize text-sm pl-3">-°</span>
+                        <span class="capitalize text-xs pl-3 opacity-40">-%</span>
+                        <span class="capitalize text-md pl-3">-</span>
+                    </span>
+                    <span v-for="hour in day.list" :class="selectedStyle(hour)" class="py-2 cursor-pointer border-l-0 border-white border-opacity-20 px-1 text-left text-md flex flex-col justify-evenly w-1/6" :key="hour.dt" @click="selectWeather(hour)">
+                        <img class="h-18" :src="hour.icon">
+                        <span class="capitalize text-sm pl-3">{{hour.feels_like}}°</span>
+                        <span class="capitalize text-xs pl-3 opacity-40">{{hour.humidity}}%</span>
+                        <span class="capitalize text-md pl-3">{{hour.hour}}</span>
                     </span>
                 </span>
             </div>
@@ -286,6 +318,10 @@ Vue.component('bikes-section', {
             }
         },
         drawBikesOnMap() {
+            var bounds = new google.maps.LatLngBounds();
+            var i = 0,
+                lat = 0,
+                lng = 0;
             this.bikes.forEach(bike => {
                 console.log(bike.current_lat, bike.current_lon);
                 if (bike_markers.hasOwnProperty(bike.id)) {
@@ -310,6 +346,14 @@ Vue.component('bikes-section', {
                     icon: icon,
                 });
 
+                let lat = parseFloat(bike.current_lat);
+                let lng = parseFloat(bike.current_lon);
+                bounds.extend({
+                    lat: lat,
+                    lng: lng
+                });
+
+
                 marker.addListener("click", () => {
                     map.setZoom(15);
                     map.setCenter(marker.getPosition());
@@ -317,7 +361,17 @@ Vue.component('bikes-section', {
                 });
 
                 bike_markers[bike.id] = marker;
+                i++;
+
             });
+            console.log(bounds);
+            map.setZoom(12);
+            map.setCenter(bounds.getCenter())
+            //map.fitBounds(bounds);
+            /*map.setCenter({
+                lat: parseFloat(lat / i),
+                lng: parseFloat(lng / i)
+            });*/
         }
     },
     mounted() {
@@ -394,7 +448,7 @@ Vue.component('input-field', {
     template: `
         <div class="relative w-full text-left text-white flex flex-col justify-center px-8 my-2">
             <!--h4 class="text-sm font-bold">{{label}}</h4-->
-            <input :placeholder="label" :name="name" :value="value" :type="type" class="placeholder-gray-400 bg-light my-1 px-4 py-3 border-none focus:outline-none rounded-2xl text-lg font-semibold">
+            <input :placeholder="label" :name="name" :value="value" :type="type" class="placeholder-dark placeholder-opacity-60 bg-light my-1 px-4 py-3 border-none focus:outline-none rounded-2xl text-lg font-semibold">
         </div>
     `
 });
@@ -444,6 +498,13 @@ Vue.component('bike-card', {
         updateBike() {
             //console.log('Emetto evento');
             this.$emit('updateBike', this.bike);
+        },
+        seeOnMap() {
+            let marker = bike_markers[this.bike.id];
+            map.setZoom(15);
+            map.setCenter(marker.getPosition());
+            maps_app.popupBike(this.bike);
+            navigationBar.goTo(navigationBar.sections[2]);
         }
     },
     mounted() {},
@@ -457,9 +518,9 @@ Vue.component('bike-card', {
                         <span class="absolute top-0 right-0 mt-8 -mr-2 flex flex-col justify-start z-40">
                             <span v-if="!options" class="cursor-pointer mb-1 text-red-500 bg-white rounded-3xl p-2 material-icons" @click="options = true">more_vert</span>
                             <span v-if="options" class="cursor-pointer mb-1 text-red-500 bg-white rounded-3xl p-2 material-icons" @click="options = false">expand_less</span>
-                            <span v-if="options" class="cursor-pointer mb-1 text-white bg-light rounded-3xl p-2 material-icons" @click="removeBike()">delete</span>
-                            <span v-if="options" class="cursor-pointer mb-1 text-white bg-light rounded-3xl p-2 material-icons" @click="updateBike()">edit</span>
-                            <span v-if="options" class="cursor-pointer mb-1 text-white bg-light rounded-3xl p-2 material-icons" @click="">map</span>
+                            <transition name="fade"><span v-if="options" class="cursor-pointer mb-1 text-white bg-light rounded-3xl p-2 material-icons" @click="removeBike()">delete</span></transition>
+                            <transition name="fade"><span v-if="options" class="cursor-pointer mb-1 text-white bg-light rounded-3xl p-2 material-icons" @click="updateBike()">edit</span></transition>
+                            <transition name="fade"><span v-if="options" class="cursor-pointer mb-1 text-white bg-light rounded-3xl p-2 material-icons" @click="seeOnMap()">map</span></transition>
                         </span>
                     </div>
                     <div class="absolute bottom-0 left-0 w-full h-1/2 flex flex-col text-left justify-end p-6 py-2" >
@@ -501,6 +562,7 @@ Vue.component('user-section', {
             <info-data v-show="user.cellphone" label="Cellulare" :data="user.cellphone"></info-data>
             <info-data label="User Id" :data="user.id"></info-data>
             <info-data label="Google Id" :data="user.google_id"></info-data>
+            <theme-selector class="mt-6"></theme-selector>
         </span>
         <flat-button onclick="logout()" label="Esegui Logout" mode="light"></flat-button>
     </div>`
@@ -520,6 +582,50 @@ Vue.component('info-data', {
         <div class="relative w-full text-left text-white flex flex-col justify-center px-8 my-2">
             <h4 class="text-sm font-bold">{{label}}</h4>
             <h3 class="text-md font-normal">{{data}}</h3>
+        </div>
+    `
+});
+
+Vue.component('theme-selector', {
+    data() {
+        return {
+            colors: [{
+                    name: 'default',
+                    hex: '#2F263D'
+                },
+                {
+                    name: 'purple',
+                    hex: '#3E276A'
+                },
+                {
+                    name: 'green',
+                    hex: '#2D3D26'
+                },
+                {
+                    name: 'blue',
+                    hex: '#263A3D'
+                },
+                {
+                    name: 'red',
+                    hex: '#3D2626'
+                },
+            ]
+        }
+    },
+    methods: {
+        switchTheme(name) {
+            switchTheme(name);
+        },
+        getColor(hex) {
+            return 'background: ' + hex;
+        }
+    },
+    template: `
+        <div class="relative w-full text-left text-white flex flex-col justify-center px-8 my-2">
+            <h4 class="text-sm font-bold">Cambia Tema</h4>
+            <div class="flex flex-row justify-evenly p-4">
+                <span v-for="color in colors" :key="color.name" @click="switchTheme(color.name)" class="cursor-pointer h-12 w-12 rounded-full border-2 border-white shadow-lg" :style="getColor(color.hex)"></span>
+            </div>
         </div>
     `
 });

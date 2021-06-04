@@ -6,8 +6,7 @@
     --navigation-bar-height: 4rem;
 }
 
-div,
-span {
+div, span {
     -webkit-touch-callout: none;
     /* iOS Safari */
     -webkit-user-select: none;
@@ -22,7 +21,6 @@ span {
     /* Non-prefixed version, currently
                                     supported by Chrome, Edge, Opera and Firefox */
 }
-
 
 /** THEME **/
 
@@ -43,6 +41,14 @@ span {
     line-height: 0.75rem!important;
 }
 
+.border-dark {
+    border-color: var(--theme-dark);
+}
+
+.placeholder-dark::placeholder {
+    color: white;
+    opacity: 0.7;
+}
 
 /* TEXT FIELDS */
 
@@ -50,11 +56,7 @@ span {
     font-family: 'Sofia Pro';
 }
 
-h1,
-h2,
-h3,
-h4,
-h5 {
+h1, h2, h3, h4, h5 {
     font-family: 'Sofia Pro';
     color: white;
     font-style: normal;
@@ -75,7 +77,6 @@ h3 {
     font-weight: 500;
     font-size: 18px;
 }
-
 
 /* CUSTOM ELEMENTS */
 
@@ -115,25 +116,19 @@ h3 {
     color: white;
 }
 
-
 /**************/
-
 
 /* Enter and leave animations can use different */
 
-
 /* durations and timing functions.              */
 
-.fade-enter-active,
-.fade-leave-active {
+.fade-enter-active, .fade-leave-active {
     transition: opacity 0.25s ease-out;
 }
 
-.fade-enter,
-.fade-leave-to {
+.fade-enter, .fade-leave-to {
     opacity: 0;
 }
-
 
 /****SECTION****/
 
@@ -162,11 +157,9 @@ h3 {
     z-index: 5;
 }
 
-
 /* ROUTE CARD */
 
-.route-card *,
-bike-card * {
+.route-card *, bike-card * {
     transition: all 0.6s ease!important;
 }
 
@@ -192,11 +185,11 @@ bike-card * {
 }
 
 .bg-route-shade {
-    background: linear-gradient(180deg, rgba(196, 196, 196, 0) 27.93%, #170F24 100%);
+    background: linear-gradient(180deg, rgba(196, 196, 196, 0) 27.93%, var(--theme-dark) 100%);
 }
 
 .bg-bike-shade {
-    background: linear-gradient(180deg, rgba(196, 196, 196, 0) 27.93%, #170F24 100%);
+    background: linear-gradient(180deg, rgba(196, 196, 196, 0) 27.93%, var(--theme-dark) 100%);
 }
 
 .ellipsis {
@@ -208,7 +201,6 @@ bike-card * {
     -webkit-box-orient: vertical;
 }
 
-
 /*FLIPPING TRANSITION*/
 
 .flip-enter-active {
@@ -219,12 +211,10 @@ bike-card * {
     display: none;
 }
 
-.flip-enter,
-.flip-leave {
+.flip-enter, .flip-leave {
     transform: rotateY(180deg);
     opacity: 0;
 }
-
 
 /* DESKTOP */
 
@@ -247,7 +237,7 @@ bike-card * {
 }
 
 @media screen and (min-width: 600px) {
-     :root {
+    :root {
         --vh: 812px;
         --vw: 375px;
     }
@@ -303,16 +293,13 @@ bike-card * {
     }
 }
 
-
 /*SCROLLBAR*/
-
 
 /* width */
 
 ::-webkit-scrollbar {
     width: 3px;
 }
-
 
 /* Track */
 
@@ -321,14 +308,12 @@ bike-card * {
     border-radius: 10px;
 }
 
-
 /* Handle */
 
 ::-webkit-scrollbar-thumb {
     background: white;
     border-radius: 7px;
 }
-
 
 /* The container must be positioned relative: */
 
@@ -346,7 +331,6 @@ bike-card * {
     background-color: DodgerBlue;
 }
 
-
 /* Style the arrow inside the select element: */
 
 .select-selected:after {
@@ -360,7 +344,6 @@ bike-card * {
     border-color: #fff transparent transparent transparent;
 }
 
-
 /* Point the arrow upwards when the select box is open (active): */
 
 .select-selected.select-arrow-active:after {
@@ -368,18 +351,15 @@ bike-card * {
     top: 7px;
 }
 
-
 /* style the items (options), including the selected item: */
 
-.select-items div,
-.select-selected {
+.select-items div, .select-selected {
     color: #ffffff;
     padding: 8px 16px;
     border: 1px solid transparent;
     border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
     cursor: pointer;
 }
-
 
 /* Style items (options): */
 
@@ -392,14 +372,38 @@ bike-card * {
     z-index: 99;
 }
 
-
 /* Hide the items when the select box is closed: */
 
 .select-hide {
     display: none;
 }
 
-.select-items div:hover,
-.same-as-selected {
+.select-items div:hover, .same-as-selected {
     background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* TRANSITIONS */
+
+.slide-leave-active, .slide-enter-active {
+    transition: 0.4s;
+}
+
+.slide-enter {
+    transform: scale(0%, 0%);
+}
+
+.slide-leave-to {
+    transform: scale(0%, 0);
+}
+
+.rotate-leave-active, .rotate-enter-active {
+    transition: 0.4s;
+}
+
+.rotate-enter {
+    transform: rotateX(0deg);
+}
+
+.rotate-leave-to {
+    transform: rotateX(360deg);
 }

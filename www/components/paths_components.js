@@ -113,7 +113,7 @@ Vue.component('route-card', {
                             <span class="text-dark text-xs font-normal ellipsis mb-2">{{route.ideal_for.description}}</span>
                         </div>
                         <div class="absolute bottom-2 text-center w-full">
-                            <flat-button label="Seleziona" mode="dark" class="mx-auto"></flat-button>
+                            <flat-button label="Seleziona" mode="dark" class="mx-auto hidden"></flat-button>
                         </div>
                     </span>
             </div>

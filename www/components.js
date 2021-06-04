@@ -1,4 +1,4 @@
-let created = async function() {
+let created = async function () {
     await setTimeout(null, 0);
     this.selectedSection = this.sections[0];
     this.$emit("update-section", this.selectedSection.path);
@@ -7,7 +7,7 @@ let created = async function() {
 
 var navigationBar;
 Vue.component('navigation-bar', {
-    data: function() {
+    data: function () {
         return {
             sections: [{
                     "label": "Home",
@@ -71,7 +71,7 @@ Vue.component('navigation-bar', {
 function selector_class(condition) {
     return {
         'text-white': condition,
-        'text-gray-500': !condition,
+        'text-white opacity-60': !condition,
         'text-lg': condition
     }
 };
@@ -120,13 +120,6 @@ Vue.component('flat-button', {
 Vue.component('backdrop', {
     template: `<div class="h-full w-full bg-black absolute top-0 left-0 z-30 opacity-60"></div>`
 });
-
-/*
-app = app.mount('#app');
-*/
-
-
-
 
 Vue.component('section-header', {
     props: ['title', 'subtitle'],

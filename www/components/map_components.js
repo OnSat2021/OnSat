@@ -20,6 +20,10 @@ Vue.component('route-map', {
         popupBike(bike) {
             this.showPopupBike = true;
             this.bike = bike;
+        },
+        closePopup() {
+            this.showPopupBike = false;
+            this.bike = null;
         }
     },
     mounted() {
@@ -45,12 +49,38 @@ Vue.component('popup-bike', {
         return {}
     },
     methods: {
-
+        blocca() {
+            app.loaderPresent('Invio comando di blocco...');
+            setTimeout(() => {
+                app.alertPresent('Invio Confermato', 'Comando di blocco inviato correttamente!', 'ok');
+                app.loaderDismiss();
+            }, 2000);
+        },
+        sblocca() {
+            app.loaderPresent('Invio comando di sblocco...');
+            setTimeout(() => {
+                app.alertPresent('Invio Confermato', 'Comando di sblocco inviato correttamente!', 'ok');
+                app.loaderDismiss();
+            }, 2000);
+        },
+        closePopup() {
+            this.$parent.closePopup();
+        }
     },
     template: `
-        <div class="select-none flex flex-row w-full bg-light absolute h-1/4 w-full bottom-0 p-4 left-0 text-left">
+    <transition name="fade">
+        <div class="select-none flex flex-row w-full bg-light absolute h-1/4 w-full bottom-6 p-4 left-0 text-left flex-wrap" style="bottom: var(--navigation-bar-height)!important">
+            <div class="absolute top-0 left-0 w-full -mt-6 bg-transparent flex flex-row justify-center">
+                <span class="mx-auto cursor-pointer mb-1 text-dark bg-white rounded-3xl p-2 material-icons shadow-lg" @click="closePopup()">close</span>
+            </div>
+
+            <div class="flex flex-col justify-center w-1/2 pl-4">
+                <span class="text-xl" v-html="bike.name"></span>
+                <span class="text-md" v-html="bike.model.name"></span>
+                <span class="text-sm text-blue-400">{{bike.current_lat}}, {{bike.current_lon}}</span>
+            </div>
             
-            <div class="flex flex-col h-full justify-center text-center w-1/2 pb-24">
+            <div class="flex flex-col justify-center text-center w-1/2 ">
                 <span>
                     <span class="text-4xl material-icons">bolt</span>
                     <span class="text-4xl text-green-400">{{bike.battery_level}} %</span>
@@ -58,13 +88,20 @@ Vue.component('popup-bike', {
                 <span class="text-md">di carica residua</span>
             </div>
 
-            <div class="flex flex-col h-full justify-center w-1/2 pb-24">
-                <span class="text-xl" v-html="bike.name"></span>
-                <span class="text-md" v-html="bike.model.name"></span>
-                <span class="text-sm text-blue-400">{{bike.current_lat}}, {{bike.current_lon}}</span>
+            <div class="flex flex-col justify-center text-center w-1/2 pb-24">
+                <span>
+                    <flat-button label="Blocca" @click="blocca()"></flat-button>
+                </span>
+            </div>
+
+            <div class="flex flex-col justify-center text-center w-1/2 pb-24">
+                <span>
+                    <flat-button label="Sblocca" mode="dark" @click="sblocca()"></flat-button>
+                </span>
             </div>
             
         </div>
+    </transition>
     `
 });
 

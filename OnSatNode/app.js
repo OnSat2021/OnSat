@@ -18,7 +18,7 @@ app.use(express.urlencoded({ // Da vedere
 
 
 // Add headers
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
 
     // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -38,12 +38,12 @@ app.use(function(req, res, next) {
 
 
 
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
     console.log("RICHIESTA ROOT");
     res.send('Sono il grandissimo Groot!!!');
 });
 
-app.get('/weather', function(req, res) {
+app.get('/weather', function (req, res) {
     getWeather(res);
 });
 
@@ -52,7 +52,7 @@ app.get('/weather', function(req, res) {
 
 
 // GOOGLE LOGIN
-app.post('/google-login', function(req, res) {
+app.post('/google-login', function (req, res) {
     //res.send(req.body);
 
     let body = req.body;
@@ -78,7 +78,7 @@ app.post('/google-login', function(req, res) {
         };
 
         const query = 'SELECT id FROM user WHERE google_id=?';
-        con.query(query, [google_id], function(err, result) {
+        con.query(query, [google_id], function (err, result) {
             if (err) {
                 json = {
                     'error_code': 1,
@@ -99,7 +99,7 @@ app.post('/google-login', function(req, res) {
                 } else {
                     const user_id = "user_" + makeid(15);
                     const query = 'INSERT INTO user (id, name, surname, username, email, google_id) VALUES (?,?,?,?,?,?)';
-                    con.query(query, [user_id, payload.given_name, payload.family_name, payload.email, payload.email, payload.sub], function(err, result) {
+                    con.query(query, [user_id, payload.given_name, payload.family_name, payload.email, payload.email, payload.sub], function (err, result) {
                         if (err) {
                             json = {
                                 'error_code': 1,
@@ -129,7 +129,7 @@ app.post('/google-login', function(req, res) {
 
 });
 const redirect_uri = 'https://onsat.ongroup.cloud/client/www/signin.html';
-app.get('/google/oauth/login-url', function(req, res) {
+app.get('/google/oauth/login-url', function (req, res) {
     const state = makeid(32);
     const response = {
         'url': 'https://accounts.google.com/o/oauth2/v2/auth?' +
@@ -155,7 +155,7 @@ function makeid(length) {
     return result.join('');
 }
 
-app.post('/google/oauth/token', function(req, res) {
+app.post('/google/oauth/token', function (req, res) {
 
     var formData = {
         code: req.body.code,
@@ -181,7 +181,7 @@ app.post('/google/oauth/token', function(req, res) {
 
 var a_t;
 
-app.get('/google/oauth/get/token', function(req, res) {
+app.get('/google/oauth/get/token', function (req, res) {
     const json = {
         "access_token": a_t
     };
@@ -195,7 +195,7 @@ app.post('/prima_risorsa_post', function (req, res) {
 });*/
 
 
-var server = app.listen(8888, function() {
+var server = app.listen(8888, function () {
     var host = server.address().address;
     var port = server.address().port;
 
@@ -244,14 +244,14 @@ var con = mysql.createConnection({
     database: process.env.DB_NAME
 });
 
-con.connect(function(err) {
+con.connect(function (err) {
     if (err) throw err;
     console.log("Connected!");
 });
 
-app.get('/data/products', function(req, res) {
+app.get('/data/products', function (req, res) {
     const query = 'SELECT * FROM product';
-    con.query(query, function(err, result) {
+    con.query(query, function (err, result) {
         let json;
         if (err) {
             json = {
@@ -284,7 +284,7 @@ function inoltra_errore(res, error_desc, error_code = 1) {
 }
 
 //Users
-app.get('/user', function(req, res) {
+app.get('/user', function (req, res) {
     //res.send(req.body);
     let body = req.query;
     console.log(body);
@@ -293,7 +293,7 @@ app.get('/user', function(req, res) {
     if (body.user_id) {
         let user_id = body.user_id;
         const query = 'SELECT id, name, surname, username, google_id, cellphone, email, address FROM user WHERE id=? LIMIT 1';
-        con.query(query, [user_id], function(err, result) {
+        con.query(query, [user_id], function (err, result) {
             if (err) {
                 inoltra_errore(res, err.message);
             } else {
@@ -315,7 +315,7 @@ app.get('/user', function(req, res) {
 });
 
 //Bikes
-app.get('/bike', function(req, res) {
+app.get('/bike', function (req, res) {
     //res.send(req.body);
     let body = req.query;
     console.log(body);
@@ -342,7 +342,7 @@ app.get('/bike', function(req, res) {
     let query = 'SELECT b.id, u.id as user_id, m.id AS model_id, m.name AS model_name, m.picture AS model_picture, m.battery_voltage AS model_battery_voltage, b.name, b.current_lat, b.current_lon, b.imei_tracker, b.battery_level ' +
         'FROM bike b JOIN user u ON b.user_id = u._id JOIN model m ON b.model_id = m._id ' + where;
 
-    con.query(query, function(err, result) {
+    con.query(query, function (err, result) {
         if (err) {
             inoltra_errore(res, err.message);
             return;
@@ -381,11 +381,11 @@ app.get('/bike', function(req, res) {
     });
 
 });
-app.get('/model', function(req, res) {
+app.get('/model', function (req, res) {
     //res.send(req.body);
     let query = 'SELECT id, name, picture, battery_voltage FROM model WHERE 1';
 
-    con.query(query, function(err, result) {
+    con.query(query, function (err, result) {
         if (err) {
             inoltra_errore(res, err.message);
             return;
@@ -419,7 +419,7 @@ app.get('/model', function(req, res) {
 
 
 function esegui_query(query, args = []) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         con.query(query, args, (err, result) => {
             if (err) {
                 reject(err)
@@ -431,7 +431,7 @@ function esegui_query(query, args = []) {
 }
 
 function getPoi(_id = 0) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         if (_id == 0)
             reject({
                 message: 'Errore interno recuper informazioni.'
@@ -447,7 +447,7 @@ function getPoi(_id = 0) {
 }
 
 function getIdealFor(_id = 0) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         if (_id == 0)
             reject({
                 message: 'Errore interno recuper informazioni.'
@@ -461,7 +461,7 @@ function getIdealFor(_id = 0) {
     });
 }
 
-app.get('/route', function(req, res) {
+app.get('/route', function (req, res) {
     //res.send(req.body);
     let query = 'SELECT id, name, description, start_poi_id, end_poi_id, ideal_for_id, length, duration, picture FROM route WHERE 1 ';
     esegui_query(query).then(result => {
@@ -516,7 +516,7 @@ app.get('/route', function(req, res) {
 
 
 
-app.post('/bike', function(req, res) {
+app.post('/bike', function (req, res) {
     //res.send(req.body);
     let body = req.body;
     console.log(body);
@@ -564,7 +564,7 @@ app.post('/bike', function(req, res) {
 
     console.log(query);
 
-    con.query(query, data, function(err, result) {
+    con.query(query, data, function (err, result) {
         if (err) {
             inoltra_errore(res, err.message);
             return;
@@ -578,7 +578,7 @@ app.post('/bike', function(req, res) {
     });
 });
 
-app.delete('/bike', function(req, res) {
+app.delete('/bike', function (req, res) {
     //res.send(req.body);
     let body = req.body;
     console.log(body);
@@ -595,7 +595,7 @@ app.delete('/bike', function(req, res) {
 
     console.log(query);
 
-    con.query(query, [bike_id], function(err, result) {
+    con.query(query, [bike_id], function (err, result) {
         if (err) {
             inoltra_errore(res, err.message);
             return;
@@ -616,9 +616,9 @@ app.delete('/bike', function(req, res) {
 //STRIPE
 
 function newOrder(json) {
-    const query = 'INSERT INTO onsat_admin.order (id, shipping_address, user_id, product_id, quantity, status_id) VALUES (?, (SELECT address FROM user WHERE id=? LIMIT 1), (SELECT _id FROM user WHERE id=? LIMIT 1), (SELECT _id FROM product WHERE id=? LIMIT 1), ?, ?)';
+    const query = 'INSERT INTO onsat_admin.order (id, shipping_address, fiscal_code, user_id, product_id, quantity, status_id) VALUES (?, ?, ?, (SELECT _id FROM user WHERE id=? LIMIT 1), (SELECT _id FROM product WHERE id=? LIMIT 1), ?, ?)';
     const order_id = 'order_' + makeid(15);
-    esegui_query(query, [order_id, json.price_data.product_data.metadata.user_id, json.price_data.product_data.metadata.user_id, json.price_data.product_data.metadata.product_id, json.quantity, 5]).catch(err => {
+    esegui_query(query, [order_id, json.price_data.product_data.metadata.address, json.price_data.product_data.metadata.fiscal_code, json.price_data.product_data.metadata.user_id, json.price_data.product_data.metadata.product_id, json.quantity, 1]).catch(err => {
         console.log(err);
     });
 }
@@ -626,16 +626,119 @@ function newOrder(json) {
 
 const stripe = require('stripe')('sk_test_AQ2g55RQvS6uKboqAHSHL2m800l7e8oUAY')
 
-app.post('/create-checkout-session', async(req, res) => {
+
+app.post('/stripe-payment-intent', async (req, res) => {
     let body = req.body;
 
+    console.log(body);
 
+    if (body.name && body.name != "") {
+        var name = body.user_id;
+    } else {
+        inoltra_errore(res, 'Il campo Nominativo non può essere vuoto');
+        return;
+    }
+
+    if (body.cf && body.cf != "") {
+        var cf = body.cf;
+    } else {
+        inoltra_errore(res, 'Il campo Codice Fiscale non può essere vuoto');
+        return;
+    }
+
+    if (body.address && body.address != "") {
+        var address = body.address;
+    } else {
+        inoltra_errore(res, 'Il campo Indirizzo non può essere vuoto');
+        return;
+    }
 
     if (body.user_id) {
         let user_id = body.user_id;
         const query = 'SELECT id, name, surname, username, google_id, cellphone, email, address FROM user WHERE id=? LIMIT 1';
 
-        esegui_query(query, [user_id]).then(async function(result) {
+        esegui_query(query, [user_id]).then(async function (result) {
+            email = result[0].email
+
+            let cart = body.cart;
+            console.log(cart);
+
+            var amount = 0;
+
+            let line_items = [];
+            cart.forEach(item => {
+                const unit_amount = parseFloat(item.product.price).toFixed(2);
+                let json = {
+                    price_data: {
+                        currency: 'eur',
+                        product_data: {
+                            name: item.product.name,
+                            description: item.product.name,
+                            images: [item.product.picture],
+                            metadata: {
+                                product_id: item.product.id,
+                                user_id: user_id,
+                                address: address,
+                                fiscal_code: cf
+                            }
+                        },
+                        unit_amount: unit_amount,
+                    },
+                    quantity: item.quantity,
+                };
+
+                amount += unit_amount * item.quantity;
+
+                newOrder(json);
+
+                line_items.push(json);
+            });
+
+
+            amount = parseFloat(amount * 100).toFixed(0);
+
+            /*const session = await stripe.checkout.sessions.create({
+                payment_method_types: ['card'],
+                line_items: line_items,
+                customer_email: email,
+                mode: 'payment',
+                success_url: 'https://onsat.ongroup.cloud/client/www/index.html?paymentStatus=success',
+                cancel_url: 'https://onsat.ongroup.cloud/client/www/index.html?paymentStatus=failed',
+            });*/
+            try {
+
+                var paymentIntent = await stripe.paymentIntents.create({
+                    payment_method_types: ['card'],
+                    amount: amount,
+                    currency: 'eur'
+                });
+            } catch (err) {
+                inoltra_errore(res, 'Errore Stripe: ' + err.message);
+            }
+
+            res.json({
+                error_code: 0,
+                error_desc: 'ok',
+                result: {
+                    client_secret: paymentIntent.client_secret
+                }
+            });
+
+        });
+    } else {
+        inoltra_errore(res, 'Campo user_id obbligatorio');
+        return;
+    }
+});
+
+app.post('/create-checkout-session', async (req, res) => {
+    let body = req.body;
+
+    if (body.user_id) {
+        let user_id = body.user_id;
+        const query = 'SELECT id, name, surname, username, google_id, cellphone, email, address FROM user WHERE id=? LIMIT 1';
+
+        esegui_query(query, [user_id]).then(async function (result) {
             email = result[0].email
 
             let cart = body.cart;
@@ -687,4 +790,89 @@ app.post('/create-checkout-session', async(req, res) => {
         inoltra_errore(res, 'Campo user_id obbligatorio');
         return;
     }
+});
+
+
+
+
+
+//Orders
+app.get('/order', function (req, res) {
+    //res.send(req.body);
+    let body = req.query;
+    console.log(body);
+    let json;
+
+    let where = 'WHERE 1';
+    let ok = false;
+
+    if (body.order_id) {
+        where += " AND order.id='" + body.order_id + "'";
+        ok = true;
+    }
+
+    if (body.user_id) {
+        where += " AND u.id='" + body.user_id + "'";
+        ok = true;
+    }
+
+    if (!ok) {
+        inoltra_errore(res, 'Devi inserire almeno uno tra user_id e order_id');
+        return;
+    }
+
+    let query = 'SELECT o.id, u.id as user_id, shipping_address, fiscal_code, product_id, quantity, status_id, timestamp ' +
+        'FROM onsat_admin.order o JOIN user u ON o.user_id = u._id ' + where + ' ORDER BY o._id DESC';
+    con.query(query, function (err, result) {
+        if (err) {
+            inoltra_errore(res, err.message);
+            return;
+        } else {
+            console.log(result);
+            if (result.length > 0) {
+                let orders = [];
+                let count = result.length;
+                result.forEach(row => {
+
+                    query = 'SELECT code, name, label FROM status WHERE _id=?'
+                    esegui_query(query, [row.status_id]).then(
+                        status => {
+                            query = 'SELECT id, name, description, price, available, picture FROM product WHERE _id=?';
+                            esegui_query(query, [row.product_id]).then(
+                                product => {
+                                    order = {
+                                        id: row.id,
+                                        user_id: row.user_id,
+                                        product: product[0],
+                                        shipping_address: row.shipping_address,
+                                        fiscal_code: row.fiscal_code,
+                                        quantity: row.quantity,
+                                        status: status[0],
+                                        timestamp: row.timestamp
+                                    }
+                                    orders.push(order);
+                                    if (orders.length == count) {
+                                        json = {
+                                            "error_code": 0,
+                                            "error_desc": 'ok',
+                                            "result": orders
+                                        };
+                                        res.send(json);
+                                    }
+                                }
+                            ).catch(err => {
+                                inoltra_errore(res, err.message);
+                            });
+                        }
+                    ).catch(err => {
+                        inoltra_errore(res, err.message);
+                    });
+                });
+            } else {
+                inoltra_errore(res, 'Nessun ordine trovato per la ricerca corrente');
+                return;
+            }
+        }
+    });
+
 });

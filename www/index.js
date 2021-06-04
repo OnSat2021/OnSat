@@ -1,5 +1,5 @@
-//var SERVER_NAME = 'https://onsat.ongroup.cloud';
-var SERVER_NAME = "http://localhost:8888";
+var SERVER_NAME = 'https://onsat.ongroup.cloud';
+//var SERVER_NAME = "http://localhost:8888";
 
 var app = new Vue({
     el: "#app",
@@ -38,7 +38,7 @@ var app = new Vue({
         },
         loaderDismiss() {
             let self = this;
-            setTimeout(function() {
+            setTimeout(function () {
                 self.print("Dismetti Loader");
                 self.loader.active = false;
             }, 500);
@@ -128,7 +128,7 @@ function sendRequest(mode = 'POST', relative_path, json = {}, onSuccess = onSucc
 
     xhr.open(mode, url);
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.onload = function() {
+    xhr.onload = function () {
         let reply = xhr.responseText;
         try {
             app.loaderDismiss();
@@ -170,6 +170,7 @@ function serialize(obj) {
 }
 
 window.addEventListener('DOMContentLoaded', (event) => {
+    switchTheme();
     const params = getParams();
     console.log("Parametri ricevuti: ");
     console.log(params);
@@ -184,5 +185,43 @@ window.addEventListener('DOMContentLoaded', (event) => {
             navigationBar.goTo(navigationBar.sections[3]);
             STORE_SELECTOR.changeMap(STORE_SELECTOR.sections[1]);
         }
+    } else {
+        try {
+            navigationBar.goTo(navigationBar.sections[0]);
+            HOME_SELECTOR.changeMap(HOME_SELECTOR.sections[1]);
+        } catch (e) {
+            console.log(e);
+        }
     }
 });
+
+
+function switchTheme(theme = null) {
+    if (theme != null) window.localStorage.theme = theme;
+    let dark = '#170F24';
+    let light = '#2F263D';
+    if (window.localStorage.hasOwnProperty('theme')) {
+        switch (window.localStorage.theme) {
+            case 'purple':
+                light = '#3E276A';
+                dark = '#270F53';
+                break;
+            case 'green':
+                light = '#2D3D26';
+                dark = '#12240F';
+                break;
+            case 'blue':
+                light = '#263A3D';
+                dark = '#0F2124';
+                break;
+            case 'red':
+                light = '#3D2626';
+                dark = '#240F0F';
+                break;
+
+        }
+    }
+
+    $(':root').css('--theme-dark', dark);
+    $(':root').css('--theme-light', light);
+}
