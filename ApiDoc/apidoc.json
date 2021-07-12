@@ -1,0 +1,10 @@
+{
+  "name": "example-basic",
+  "version": "0.1.0",
+  "description": "apiDoc basic example",
+  "template": {
+    "withCompare": false
+  },
+  "url" : "http://localhost:8080",
+  "sampleUrl" : "http://localhost:8080"
+}

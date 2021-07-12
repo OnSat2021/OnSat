@@ -1,0 +1,49 @@
+<html>
+
+<head>
+    <title>OnSat Control Panel</title>
+    <link rel="icon" href="https://onsat.ongroup.cloud/client/www/src/imgs/logo120x120.ico" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+
+    <!-- VUE -->
+    <script src="./src/vue.js"></script>
+
+    <!-- TAILWIND -->
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+
+    <!-- MATERIAL ICONS -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- JQUERY -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Press Start 2P', cursive;
+        }
+    </style>
+</head>
+
+<body>
+    <span id="controlpanel" class="fixed h-screen w-screen bg-white flex flex-col justify-center text-center pb-48">
+
+        <h1 class="text-black text-3xl font-bold text-left w-2/3 mx-auto">Pannello di Controllo</h1>
+
+        <connection-status :status="connectionStatus"></connection-status>
+
+        <div id="message-container" class="w-2/3 h-3/5 mx-auto bg-black shadow-2xl rounded-xl p-6">
+            <span class="overflow-y-scroll w-full h-full flex-col-reverse flex">
+                <log-message :key="i" v-for="(message, i) in messages" :message="message"></log-message>
+            </span>
+        </div>
+
+    </span>
+    <script type="text/javascript" src="src/index.js"></script>
+</body>
+
+</html>
