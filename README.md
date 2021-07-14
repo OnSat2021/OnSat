@@ -37,16 +37,35 @@ Le tecnologie impiegate sono:
 ![apis](https://user-images.githubusercontent.com/12523738/125705117-76e444b7-5b2a-4c16-8b7e-9744d11475ac.png)
 
 ### Istruzioni per l'installazione
-L'installazione consiste fondamentalmente in due passi:
-1. Clonazione della repository in locale. Basta eseguire il seguente comando nel proprio terminale:
+L'installazione consiste fondamentalmente in tre passi:
+1. Clonazione della repository in locale: basta eseguire il seguente comando nel proprio terminale:
 ``` 
-
-
+gh repo clone OnSat2021/OnSat
 ``` 
+2. Installazione di RabbitMQ tramite Docker:
+``` 
+docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+``` 
+(N.B. l'esecuzione di questo comando verificherà la presenza di un container RabbitMQ. Se questo non dovesse esserci lo scaricherà, altrimenti lo eseguirà direttamente)
 
+3. Se NodeJS non dovesse essere installato all'interno del sistema, seguire le indicazioni al link: https://nodejs.org/it/download/.
 
-
-``` javascript
-var prova;
-
+### Test dell'applicazione
+Per provare l'applicazione, eseguire in questo ordine i seguenti comandi da terminale:
+1. Esecuzione di RabbitMQ su Docker:
+``` 
+docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+``` 
+2. Esecuzione dell'Application Server. All'interno della directory ./ApplicationServer eseguire:
+``` 
+node app.js
+``` 
+3. Esecuzione del Control Panel. All'interno della directory ./ControlPanel eseguire:
 ```
+node index.js
+``` 
+4. Esecuzione del Client. All'interno della directory ./Client eseguire:
+``` 
+node index.js
+``` 
+Su Browser visitare il link http://localhost:8080 per accedere al Client, ed il link http://localhost:8889 per accedere al Control Panel.
