@@ -1,7 +1,7 @@
 # OnSat
 
 ### Descrizione del progetto
-Il progetto OnSat nasce con l'obiettivo di creare mirato ai ciclisti. In particolare, la nostra applicazione si occupa di tre ambiti:
+Il progetto OnSat nasce con l'obiettivo di creare un servizio mirato ai ciclisti. In particolare, la nostra applicazione si occupa di tre ambiti:
 * Gestione della bicicletta: se si dispone di una bicicletta smart, è possibile fare il pairing con il proprio account, in modo da tenerla sotto controllo in tempo reale.
 * Store: un negozio che permette l'acquisto di biciclette ed accessori.
 * Servizi per il ciclista: geolocalizzazione, itinerari e meteo.
