@@ -28,9 +28,21 @@ Le tecnologie impiegate sono:
 * WebSocket: usate per garantire una connessione real-time il server del Control Panel ed il suo Client, mantenendo un protocollo asincrono.
 * Docker: usato per l'esecuzione di RabbitMQ in una soluzione containerizzata.
 
+### Soddisfacimento dei requisiti
+1. L'applicazione espone le proprie API tramite REST, fornendo informazioni riguardo gli utenti e le biciclette disponibili nel Database. La documentazione del servizio è disponibile ed è stata realizzata con l'utilizzo di ApiDoc.
+2. L'applicazione si interfaccia con due servizi REST commerciali di terze parti: Stripe, OpenWheatherMaps.
+3. L'applicazione si interfaccia con due servizi REST che richiedono OAuth 2.0: Google sign-in, Google Calendar.
+4. L'applicazione utilizza protocolli asincroni: WebSocket, AMQP.
+
+![apis](https://user-images.githubusercontent.com/12523738/125705117-76e444b7-5b2a-4c16-8b7e-9744d11475ac.png)
+
+### Istruzioni per l'installazione
+L'installazione consiste fondamentalmente in due passi:
+1. Clonazione della repository in locale. Basta eseguire il seguente comando nel proprio terminale:
+``` 
 
 
-
+``` 
 
 
 
