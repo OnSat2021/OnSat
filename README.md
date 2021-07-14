@@ -16,7 +16,7 @@ L'architettura di base si fonda sulla comunicazione di tre entità:
 * Client: contiene il frontend e permette la comunicazione tra utente ed Application Server.
 * Application Server, che si occupa di:
   * Attingere ai dati forniti da API provenienti da servizi di terze parti, che verranno poi messi a disposizione al client.
-  * Comunicare con chiamate MySQL il Database (hostato su Plesk).
+  * Comunicare con il Database (hostato su Plesk) mediante query MySQL.
   * Gestire il protocollo OAuth 2.0
 * Control Panel: riceve i log provenienti da Application Server e Client presentandoli a schermo. 
 
